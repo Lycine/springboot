@@ -18,24 +18,10 @@ import javax.sql.DataSource;
 @EnableAutoConfiguration
 public class Application extends WebMvcConfigurerAdapter {
 
-    @Autowired
-    private DataSource dataSource;
-
-    @Bean
-    public JdbcTemplate jdbcTemplate() {
-        return new JdbcTemplate(dataSource);
-    }
-
-
-
-
-
-
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
         registry.addViewController("/").setViewName("home");
         registry.addViewController("/error").setViewName("error");
-
     }
 
     @Bean

@@ -88,16 +88,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Boolean isDuplicateLoginName(User user) {
-        user = userDao.selectUserByloginName(user);
-        if (null == user) {
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-    @Override
     public Boolean userAdd(User user) {
         int effect_row = userDao.addUserById(user);
         if (effect_row > 0) {
@@ -107,18 +97,13 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    @Override
-    public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
-        User user = new User();
-        user.setLoginName(s);
-        user = userDao.selectUserById(user);
-        if (user == null) {
-            throw new UsernameNotFoundException("用户名不存在");
-        }
-        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
-        //用于添加用户的权限。只要把用户权限添加到authorities 就万事大吉。
 
-        return new org.springframework.security.core.userdetails.User(user.getLoginName(),
-                user.getPassword(), authorities);
+    @Override
+    public User loadUserByUsername(User user) {
+        User resultuser = userDao.selectUserByEmail(user);
+        if (null == resultuser){
+            resultuser = userDao.selectUserByPhoneNumber(user);
+        }
+        return resultuser;
     }
 }

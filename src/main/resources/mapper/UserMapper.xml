@@ -20,7 +20,7 @@
         <result property="lastTime" column="last_time" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
     </resultMap>
 
-    <sql id="Base_Column_List">
+    <sql id="Base_Column_Alias_List">
         id,
         password as password,
         salt as salt,
@@ -39,7 +39,7 @@
     </sql>
     <select id="selectUserById" parameterType="com.artbrain.entity.User" resultType="com.artbrain.entity.User">
         SELECT
-        <include refid="Base_Column_List"/>
+        <include refid="Base_Column_Alias_List"/>
         FROM `user` WHERE id = #{user.id};
     </select>
 
@@ -95,11 +95,11 @@
     </update>
 
     <update id="deleteUserById" parameterType="com.artbrain.entity.User">
-        UPDATE passage SET status=1 WHERE status=0 limit 1;
+
     </update>
 
     <update id="realDeleteUserById" parameterType="com.artbrain.entity.User">
-        UPDATE passage SET status=1 WHERE status=0 limit 1;
+
     </update>
 
     <insert id="addUserById" parameterType="com.artbrain.entity.User">
@@ -146,10 +146,6 @@
         SELECT * FROM user WHERE email = #{user.email} and password = #{user.email};
     </select>
 
-    <select id="selectUserByloginNameAndPassword" parameterType="com.artbrain.entity.User"
-            resultType="com.artbrain.entity.User">
-        SELECT * FROM user WHERE login_name = #{user.loginName} and password = #{user.email};
-    </select>
 
     <select id="selectUserByPhoneNumberAndPassword" parameterType="com.artbrain.entity.User"
             resultType="com.artbrain.entity.User">
@@ -157,14 +153,15 @@
     </select>
 
     <select id="selectUserByEmail" parameterType="com.artbrain.entity.User" resultType="com.artbrain.entity.User">
-        SELECT * FROM user WHERE email = #{user.email};
+        SELECT
+        <include refid="Base_Column_Alias_List"/>
+        FROM user WHERE email = #{user.email};
     </select>
 
-    <select id="selectUserByloginName" parameterType="com.artbrain.entity.User" resultType="com.artbrain.entity.User">
-        SELECT * FROM user WHERE login_name = #{user.loginName};
-    </select>
 
     <select id="selectUserByPhoneNumber" parameterType="com.artbrain.entity.User" resultType="com.artbrain.entity.User">
-        SELECT * FROM user WHERE phone_number = #{user.phoneNumber};
+        SELECT
+        <include refid="Base_Column_Alias_List"/>
+        FROM user WHERE phone_number = #{user.phoneNumber};
     </select>
 </mapper>

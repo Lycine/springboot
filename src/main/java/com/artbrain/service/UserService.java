@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 /**
  * Created by hongyu on 2017/1/15.
  */
-public interface UserService extends UserDetailsService {
+public interface UserService {
     Boolean userLogin(User user);
 
     Boolean userUpdate(User user);
@@ -24,7 +24,15 @@ public interface UserService extends UserDetailsService {
 
     Boolean isDuplicatePhoneNumber(User user);
 
-    Boolean isDuplicateLoginName(User user);
 
     Boolean userAdd(User user);
+
+    /**
+     * MyUserDetailService用到
+     * 通过传邮箱或手机号来登录
+     * @param user
+     * @return
+     */
+    User loadUserByUsername(User user);
+
 }

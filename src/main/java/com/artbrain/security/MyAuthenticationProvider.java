@@ -2,6 +2,7 @@ package com.artbrain.security;
 
 
 import com.artbrain.util.CryptoUtils;
+import lombok.extern.apachecommons.CommonsLog;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -13,9 +14,14 @@ import org.springframework.stereotype.Component;
 
 import java.util.Collection;
 
+import static com.artbrain.util.Global.SECURITY_CODE_USERDELETE;
+import static com.artbrain.util.Global.SECURITY_CODE_USERSTOP;
+import static com.artbrain.util.Global.SECURITY_CODE_WRONGPASSWORD;
+
 /**
  * Created by hongyu on 2017/4/7.
  */
+@CommonsLog
 @Component
 public class MyAuthenticationProvider implements AuthenticationProvider {
 
@@ -27,37 +33,42 @@ public class MyAuthenticationProvider implements AuthenticationProvider {
      */
     @Override
     public Authentication authenticate(Authentication authentication) {
-        System.out.println("--MyAuProv");
+        //接受从表单传过来的参数
         String username = authentication.getName();
         String password = (String) authentication.getCredentials();
-        System.out.println("username: " + username);
-        System.out.println("password: " + password);
+
+        log.debug("username: " + username + " password: " + password);
+
+        //调用本地重写的加载用户方法（在这个项目里可能是手机号，邮箱）加载用户的验证所需信息。（可以写DTO，包括id，salt，password。在这里为了省事直接加载所有信息）
         MyUserDetails user = (MyUserDetails) myUserDetailsService.loadUserByUsername(username);
+
         if (user == null) {
-            System.out.println("Username not found.");
-            throw new BadCredentialsException("Username not found.");
+            log.debug("未找到用户");
+            throw new BadCredentialsException("未找到用户");
         }
 
-        //加密过程在这里体现
+        //查看用户是否停用
+        if (user.getIsDel() == 1) {
+            log.debug("用户已停用code:" + SECURITY_CODE_USERSTOP + ".id:" + user.getId());
+            throw new BadCredentialsException("用户已停用code:" + SECURITY_CODE_USERSTOP + ".id:" + user.getId());
+        }
+        //查看用户是否删除
+        if (user.getIsStop() == 1) {
+            log.debug("用户已逻辑删除code:" + SECURITY_CODE_USERDELETE + ".id:" + user.getId());
+            throw new BadCredentialsException("用户已逻辑删除code:" + SECURITY_CODE_USERDELETE + ".id:" + user.getId());
+        }
+
+        //验证密码
         String hashPassword = user.getPassword();
         String salt = user.getSalt();
-        if (user.getIsDel() == 1) {
-            System.out.println("用户已逻辑删除.code1.id:" + user.getId());
-            throw new BadCredentialsException("用户已逻辑删除.code2.id:" + user.getId());
-        }
-        if (user.getIsStop() == 1 ){
-            System.out.println("用户已停用.code1.id:" + user.getId());
-            throw new BadCredentialsException("用户已停用.code1.id:" + user.getId());
-        }
-        System.out.println(user.getIsStop()+","+user.getIsDel());
         if (!CryptoUtils.verify(hashPassword, password, salt)) {
-            System.out.println("密码不匹配.code1.id:" + user.getId());
-            throw new BadCredentialsException("密码不匹配.code3.id:" + user.getId());
+            log.debug("密码不匹配code:" + SECURITY_CODE_WRONGPASSWORD + ".id:" + user.getId());
+            throw new BadCredentialsException("密码不匹配code:" + SECURITY_CODE_WRONGPASSWORD + ".id:" + user.getId());
         }
-        System.out.println("login success");
+
+        //查看用户对应权限
         Collection<? extends GrantedAuthority> authorities = user.getAuthorities();
-        System.out.println("1: " + authorities.toString());
-        System.out.println("2: " + new UsernamePasswordAuthenticationToken(user, password, authorities).toString());
+        log.debug("login success, username: " + username + ", authorities: " + authorities.toString());
         return new UsernamePasswordAuthenticationToken(user, password, authorities);
     }
 

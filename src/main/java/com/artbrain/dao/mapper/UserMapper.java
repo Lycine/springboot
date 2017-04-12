@@ -36,8 +36,7 @@ public interface UserMapper extends UserDao {
     @Override
     User selectUserByEmailAndPassword(@Param("user") User user);
 
-    @Override
-    User selectUserByloginNameAndPassword(@Param("user") User user);
+
 
     @Override
     User selectUserByPhoneNumberAndPassword(@Param("user") User user);
@@ -46,8 +45,7 @@ public interface UserMapper extends UserDao {
     @Override
     User selectUserByEmail(@Param("user") User user);
 
-    @Override
-    User selectUserByloginName(@Param("user") User user);
+
 
     @Override
     User selectUserByPhoneNumber(@Param("user") User user);

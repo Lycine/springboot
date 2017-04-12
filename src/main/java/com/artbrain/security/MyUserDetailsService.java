@@ -2,7 +2,9 @@ package com.artbrain.security;
 
 import com.artbrain.dao.UserDao;
 import com.artbrain.entity.User;
+import com.artbrain.service.UserService;
 import com.artbrain.service.impl.UserServiceImpl;
+import lombok.extern.apachecommons.CommonsLog;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -15,44 +17,32 @@ import javax.annotation.Resource;
 /**
  * Created by hongyu on 2017/4/7.
  */
+@CommonsLog
 @Service("MyUserDetailsImpl")
 public class MyUserDetailsService implements UserDetailsService {
     @Autowired
-    private UserServiceImpl userServiceImpl;
+    private UserService userService;
 
     @Autowired
     private UserDao userDao;
 
+    /**
+     * 重写的加载用户方法，可以通过手机号，邮箱
+     * @param username
+     * @return
+     * @throws UsernameNotFoundException
+     */
     @Override
-    public UserDetails loadUserByUsername(String loginName) throws UsernameNotFoundException {
-        System.out.println("--MyUserDetailsService");
-        System.out.println("loginName: "+ loginName);
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        log.debug("MyAuthPro传过来的username: " + username);
         User user = new User();
-        try {
-//            user = userServiceImpl.findByName(userName);
-            user.setLoginName(loginName);
-            user = userDao.selectUserByloginName(user);
-            if (null == user){
-                System.out.println("not use loginname");
-                user = new User();
-                user.setEmail(loginName);
-                user = userDao.selectUserByEmail(user);
-            } else if (null == user) {
-                System.out.println("not use email");
-                user = new User();
-                user.setPhoneNumber(loginName);
-                user = userDao.selectUserByPhoneNumber(user);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("user select fail");
-            throw new UsernameNotFoundException("user select fail");
+        user.setPhoneNumber(username);
+        user.setEmail(username);
+        user = userService.loadUserByUsername(user);
+        if (null == user) {
+            log.debug("未找到用户: " + username);
+            throw new UsernameNotFoundException("未找到用户");
         }
-        if(user == null || user.getId() == 0){
-            System.out.println("no user found");
-            throw new UsernameNotFoundException("no user found");
-        } else {
-            return new MyUserDetails(user);
-        }
+        return new MyUserDetails(user);
     }
 }

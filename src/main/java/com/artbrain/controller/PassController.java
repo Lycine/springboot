@@ -6,6 +6,7 @@ import com.artbrain.service.UserService;
 import com.artbrain.util.CryptoUtils;
 import com.artbrain.util.GetRealIp;
 import com.artbrain.util.Global;
+import lombok.extern.apachecommons.CommonsLog;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -23,6 +24,10 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.Date;
 
+import static com.artbrain.util.Global.SIGNIN_FAILURE_THRESHOLD;
+
+
+@CommonsLog
 @Controller
 @RequestMapping(value = "/pass")
 public class PassController {
@@ -71,21 +76,17 @@ public class PassController {
 
     }
 
-    @RequestMapping(value = "/loginSuccess")
-    public String loginSuccess(User newUser, RedirectAttributes attr, HttpSession session, HttpServletRequest request) {
+    @RequestMapping(value = "/SignInSuccess")
+    public String loginSuccess(User user, RedirectAttributes attr, HttpSession session, HttpServletRequest request) {
 
-        newUser = (User) session.getAttribute("user");
-
-        String ip = GetRealIp.getIpAddr(request);
-        Date date = new Date();
-        newUser.setLastTime(date);
-        newUser.setLoginIp(ip);
-        System.out.println("savelogininfo: " + newUser.toString());
-        userService.userUpdate(newUser);
-
-        System.out.println("newUser: " + newUser.toString());
-        User detailUser = userService.userDetailById(newUser);
-        System.out.println("detailUser: " + detailUser.toString());
+        user = (User) session.getAttribute("user");
+        if(userService.userUpdate(user)){
+           log.debug("登录信息保存成功");
+        } else {
+            log.debug("登录信息保存失败");
+        }
+        User detailUser = userService.userDetailById(user);
+        log.debug("detailUser: " + detailUser.toString());
         session.setAttribute("user", detailUser);
         return "redirect:/home";
     }
@@ -107,7 +108,7 @@ public class PassController {
         }
         int alreadyFailureCount = user.getLoginFailureCount();
         int newFailureCount = alreadyFailureCount + 1;
-        if (newFailureCount > Global.getSignInFailureThreshold()) {
+        if (newFailureCount > SIGNIN_FAILURE_THRESHOLD) {
             user.setIsStop(1);
             userService.userUpdate(user);
             return "redirect:/pass?signIn&signInLock";

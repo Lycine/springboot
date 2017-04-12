@@ -2,10 +2,13 @@ package com.artbrain.security;
 
 import com.artbrain.entity.User;
 import com.artbrain.service.UserService;
+import com.artbrain.util.GetRealIp;
+import lombok.extern.apachecommons.CommonsLog;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.stereotype.Service;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -14,9 +17,12 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.Date;
 
+import static com.artbrain.util.Global.SIGNIN_SUCCESS_URL;
+
 /**
  * Created by hongyu on 2017/4/10.
  */
+@CommonsLog
 public class LoginSuccessHandler implements AuthenticationSuccessHandler {
 
     @Autowired
@@ -24,38 +30,13 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Authentication authentication) throws IOException, ServletException {
-        User user = this.saveLoginInfo(httpServletRequest, authentication);
-        HttpSession session = httpServletRequest.getSession();
-        session.setAttribute("user",user);
-        httpServletResponse.sendRedirect("/pass/loginSuccess");
-    }
-
-    public User saveLoginInfo(HttpServletRequest request, Authentication authentication) {
         User user = (User) authentication.getPrincipal();
-        String ip = this.getIpAddress(request);
+        String ip = GetRealIp.getIpAddr(httpServletRequest);
         Date date = new Date();
         user.setLastTime(date);
         user.setLoginIp(ip);
-        return user;
-    }
-
-    public String getIpAddress(HttpServletRequest request) {
-        String ip = request.getHeader("x-forwarded-for");
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-            ip = request.getHeader("Proxy-Client-IP");
-        }
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-            ip = request.getHeader("WL-Proxy-Client-IP");
-        }
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-            ip = request.getHeader("HTTP_CLIENT_IP");
-        }
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-            ip = request.getHeader("HTTP_X_FORWARDED_FOR");
-        }
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-            ip = request.getRemoteAddr();
-        }
-        return ip;
+        log.debug(user.toString());
+        httpServletRequest.getSession().setAttribute("user",user);
+        httpServletResponse.sendRedirect(SIGNIN_SUCCESS_URL);
     }
 }

@@ -24,14 +24,12 @@ public interface UserDao {
     //    登录用
     User selectUserByEmailAndPassword(User user);
 
-    User selectUserByloginNameAndPassword(User user);
 
     User selectUserByPhoneNumberAndPassword(User user);
 
     //    检查重复用
     User selectUserByEmail(User user);
 
-    User selectUserByloginName(User user);
 
     User selectUserByPhoneNumber(User user);
 
