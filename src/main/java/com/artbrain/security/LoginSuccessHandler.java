@@ -34,7 +34,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
         user.setLoginIp(ip);
         user.setLoginFailureCount(0);
         log.debug(user.toString());
-        httpServletRequest.getSession().setAttribute("user",user);
+        httpServletRequest.getSession().setAttribute("user", user);
         httpServletResponse.sendRedirect(SIGNIN_SUCCESS_CONTROLLER);
     }
 }

@@ -3,6 +3,7 @@ package com.artbrain.service.impl;
 import com.artbrain.dao.UserDao;
 import com.artbrain.entity.User;
 import com.artbrain.service.UserService;
+import lombok.extern.apachecommons.CommonsLog;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,6 +16,7 @@ import java.util.List;
 /**
  * Created by hongyu on 2017/1/15.
  */
+@CommonsLog
 @Service("UserService")
 public class UserServiceImpl implements UserService {
     private UserDao userDao;
@@ -26,34 +28,14 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public Boolean userLogin(User user) {
-        return null;
-    }
-
-    @Override
-    public Boolean userUpdate(User user) {
+    public Boolean userUpdateById(User user) {
         int effect_row = userDao.updateUserById(user);
-        System.out.println("effect_row: " + effect_row);
-        if (effect_row > 0) {
-            return true;
-        } else {
-            return false;
-        }
+        log.debug("修改行数：" + effect_row);
+        return effect_row > 0;
     }
 
     @Override
-    public Boolean userUpdateLoginFailure(User user) {
-        int effect_row = userDao.addUserLoginFailureCountById(user);
-        System.out.println("effect_row: " + effect_row);
-        if (effect_row > 0) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    @Override
-    public User userDetailById(User user) {
+    public User userFindById(User user) {
         System.out.println("old: " + user);
         user = userDao.selectUserById(user);
         System.out.println("new: " + user);
@@ -61,40 +43,21 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Boolean userDelete(User user) {
-        return null;
-    }
-
-    @Override
-    public Boolean userRealDelete(User user) {
-        return null;
-    }
-
-    @Override
     public Boolean isDuplicateEmail(User user) {
-        System.out.println("old: " + user);
         user = userDao.selectUserByEmail(user);
-        System.out.println("new: " + user);
-        if (null == user) {
-            return false;
-        } else {
-            return true;
-        }
+        return null != user;
     }
 
     @Override
     public Boolean isDuplicatePhoneNumber(User user) {
-        return null;
+        user = userDao.selectUserByPhoneNumber(user);
+        return null != user;
     }
 
     @Override
     public Boolean userAdd(User user) {
         int effect_row = userDao.addUserById(user);
-        if (effect_row > 0) {
-            return true;
-        } else {
-            return false;
-        }
+        return effect_row > 0;
     }
 
 

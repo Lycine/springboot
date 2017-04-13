@@ -6,13 +6,12 @@ import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
-import java.util.List;
 
 /**
  * Created by hongyu on 2017/4/7.
  */
 public class MyUserDetails extends User implements UserDetails {
-    public MyUserDetails(User user){
+    public MyUserDetails(User user) {
         super(user);
     }
 
@@ -25,7 +24,7 @@ public class MyUserDetails extends User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return getLoginName();
+        return getEmail();
     }
 
     @Override
@@ -35,7 +34,7 @@ public class MyUserDetails extends User implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return getIsStop()==0;
+        return getIsStop() == 0;
     }
 
     @Override
@@ -45,6 +44,6 @@ public class MyUserDetails extends User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return getIsStop()==0;
+        return getIsStop() == 0;
     }
 }

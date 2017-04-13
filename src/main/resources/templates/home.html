@@ -45,23 +45,60 @@
     </div>
   </div><!-- /.container-fluid -->
 </nav>
-  <div sec:authorize="hasRole('ROLE_STUDENT')">
-    <div class="container">
-      <div class="row vertical-offset-100">
-        <div class="col-md-4 col-md-offset-4">
-          <div class="panel panel-default"
-               style="border: 1px solid rgba(1, 2, 2, 0.1);border-radius: 4px;box-shadow: 0 15px 25px rgba(1, 2, 2, 0.1);padding: 20px 20px;">
-            <div class="" style="padding: 10px 15px;">
-              <h3 class="panel-title">STUDENT权限可见</h3>
-            </div>
-            <div class="panel-body">
-
-            </div>
+<div sec:authorize="hasRole('ROLE_STUDENT')">
+<!--<div>-->
+  <div class="container">
+    <div class="row vertical-offset-100">
+      <div class="col-md-4 col-md-offset-4">
+        <div class="panel panel-default"
+             style="border: 1px solid rgba(1, 2, 2, 0.1);border-radius: 4px;box-shadow: 0 15px 25px rgba(1, 2, 2, 0.1);padding: 20px 20px;">
+          <div class="" style="padding: 10px 15px;">
+            <h3 class="panel-title">更新我的信息</h3>
+          </div>
+          <div class="panel-body">
+            <form th:action="@{/student/update}" method="post" id="studentUpdateForm">
+              <fieldset>
+                <div hidden="true" class="form-group">
+                  <input class="form-control" name="id" th:value="${session.user.id}" value="" type="text"/>
+                </div>
+                <div class="form-group">
+                  <input class="form-control" placeholder="电子邮箱" name="email" type="text"/>
+                </div>
+                <div class="form-group">
+                  <input class="form-control" placeholder="密码" name="password" type="password" value=""/>
+                </div>
+                <div class="form-group">
+                  <input class="form-control" placeholder="重复密码" name="passwordCheck" type="password" value=""/>
+                </div>
+                <div class="form-group">
+                  <input class="form-control" placeholder="昵称" name="nickName" type="text" value=""/>
+                </div>
+                <div class="form-group">
+                  <input class="form-control" placeholder="手机号" name="phoneNumber" type="text" value=""/>
+                </div>
+                <div class="alert alert-danger alert-dismissible" role="alert" th:if="${failure}">
+                  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                  <span th:text="${msg}">更新失败。</span>
+                </div>
+                <div class="alert alert-success alert-dismissible" role="alert" th:if="${success}">
+                  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                  <span th:text="${msg}">更新成功。</span>
+                </div>
+                <div class="form-group">
+                  <input class="btn btn-lg btn-primary d btn-block" type="submit" value="更新"/>
+                </div>
+              </fieldset>
+            </form>
           </div>
         </div>
       </div>
     </div>
   </div>
+</div>
 <div sec:authorize="hasRole('ROLE_TEACHER')">
   <div class="container">
     <div class="row vertical-offset-100">

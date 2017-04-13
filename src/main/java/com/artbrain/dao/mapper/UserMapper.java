@@ -4,49 +4,58 @@ import com.artbrain.dao.UserDao;
 import com.artbrain.entity.User;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Result;
-
-import java.util.List;
 
 /**
  * Created by hongyu on 2017/1/15.
  */
 @Mapper
 public interface UserMapper extends UserDao {
-
+    /**
+     * 查找用户所有信息
+     * 根据用户ID查找该用户所有信息
+     *
+     * @param user
+     * @return
+     */
     @Override
     User selectUserById(@Param("user") User user);
 
+    /**
+     * 更新用户所有不为空的信息
+     * 根据用户ID修改所有信息
+     *
+     * @param user
+     * @return
+     */
     @Override
     int updateUserById(@Param("user") User user);
 
-    @Override
-    int addUserLoginFailureCountById(@Param("user") User user);
-
-    @Override
-    int deleteUserById(@Param("user") User user);
-
-    @Override
-    int realDeleteUserById(@Param("user") User user);
-
+    /**
+     * 新增用户
+     *
+     * @param user
+     * @return
+     */
     @Override
     int addUserById(@Param("user") User user);
 
-    //    登录用
-    @Override
-    User selectUserByEmailAndPassword(@Param("user") User user);
-
-
-
-    @Override
-    User selectUserByPhoneNumberAndPassword(@Param("user") User user);
-
-    //    检查重复用
+    /**
+     * 查重邮箱
+     * 更新邮箱时查看数据库中邮箱是否已用过
+     *
+     * @param user
+     * @return
+     */
     @Override
     User selectUserByEmail(@Param("user") User user);
 
-
-
+    /**
+     * 查重手机号
+     * 更新手机号时查看数据库中手机号是否已用过
+     *
+     * @param user
+     * @return
+     */
     @Override
     User selectUserByPhoneNumber(@Param("user") User user);
 }

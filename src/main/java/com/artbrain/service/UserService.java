@@ -1,38 +1,61 @@
 package com.artbrain.service;
 
 import com.artbrain.entity.User;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.stereotype.Service;
 
 /**
  * Created by hongyu on 2017/1/15.
  */
 public interface UserService {
-    Boolean userLogin(User user);
+    /**
+     * 更新用户所有不为空的信息
+     * 根据用户ID修改所有信息
+     *
+     * @param user
+     * @return
+     */
+    Boolean userUpdateById(User user);
 
-    Boolean userUpdate(User user);
+    /**
+     * 查找用户所有信息
+     * 根据用户ID查找该用户所有信息
+     *
+     * @param user
+     * @return
+     */
+    User userFindById(User user);
 
-    Boolean userUpdateLoginFailure(User user);
-
-    User userDetailById(User user);
-
-    Boolean userDelete(User user);
-
-    Boolean userRealDelete(User user);
-
+    /**
+     * 查重邮箱
+     * 更新邮箱时查看数据库中邮箱是否已用过
+     *
+     * @param user
+     * @return
+     */
     Boolean isDuplicateEmail(User user);
 
+    /**
+     * 查重手机号
+     * 更新手机号时查看数据库中手机号是否已用过
+     *
+     * @param user
+     * @return
+     */
     Boolean isDuplicatePhoneNumber(User user);
 
-
+    /**
+     * 新增用户
+     *
+     * @param user
+     * @return
+     */
     Boolean userAdd(User user);
 
     /**
      * MyUserDetailService用到
      * 通过传邮箱或手机号来登录
+     *
      * @param user
      * @return
      */
     User loadUserByUsername(User user);
-
 }

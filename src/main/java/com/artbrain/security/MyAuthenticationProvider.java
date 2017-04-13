@@ -45,16 +45,19 @@ public class MyAuthenticationProvider implements AuthenticationProvider {
             throw new BadCredentialsException("用户已停用code:" + SIGNIN_FAILURE_USERSTOP_CODE + ".id:0");
         }
 
-        //查看用户是否停用
-        if (user.getIsDel() == 1) {
-            log.debug("用户已停用code:" + SIGNIN_FAILURE_USERSTOP_CODE + ".id:" + user.getId());
-            throw new BadCredentialsException("用户已停用code:" + SIGNIN_FAILURE_USERSTOP_CODE + ".id:" + user.getId());
-        }
         //查看用户是否删除
-        if (user.getIsStop() == 1) {
+        if (user.getIsDel() == 1) {
+
             log.debug("用户已逻辑删除code:" + SIGNIN_FAILURE_USERDELETE_CODE + ".id:" + user.getId());
             throw new BadCredentialsException("用户已逻辑删除code:" + SIGNIN_FAILURE_USERDELETE_CODE + ".id:" + user.getId());
         }
+
+        //查看用户是否停用
+        if (user.getIsStop() == 1) {
+            log.debug("用户已停用code:" + SIGNIN_FAILURE_USERSTOP_CODE + ".id:" + user.getId());
+            throw new BadCredentialsException("用户已停用code:" + SIGNIN_FAILURE_USERSTOP_CODE + ".id:" + user.getId());
+        }
+
 
         //验证密码
         String hashPassword = user.getPassword();

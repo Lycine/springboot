@@ -28,6 +28,7 @@ public class MyUserDetailsService implements UserDetailsService {
 
     /**
      * 重写的加载用户方法，可以通过手机号，邮箱
+     *
      * @param username
      * @return
      * @throws UsernameNotFoundException

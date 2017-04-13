@@ -38,29 +38,29 @@ public class PassController {
     }
 
     @RequestMapping(value = REGISTER_PROCESSIN_CONTROLLER, method = RequestMethod.POST)
-    public String register(User newUser, Model model) {
+    public String register(User user, Model model) {
         try {
-            if (null == newUser.getEmail() || "".equals(newUser.getEmail().trim())){
+            if (null == user.getEmail() || "".equals(user.getEmail().trim())) {
                 log.debug("邮箱为空");
                 return "redirect:" + REGISTER_PAGE_WRONGFORMAT;
             }
-            String email = newUser.getEmail().trim();
+            String email = user.getEmail().trim();
             if (!Validator.isEmail(email)) {
                 log.debug("邮箱格式不正确: " + email);
                 return "redirect:" + REGISTER_PAGE_WRONGFORMAT;
             }
-            if (userService.isDuplicateEmail(newUser)) {
+            if (userService.isDuplicateEmail(user)) {
                 log.debug("已注册过的邮箱");
                 return "redirect:" + REGISTER_PAGE_DUPLICATEEMAIL;
             } else {
                 log.debug("新建用户");
                 String salt = CryptoUtils.getSalt();//盐值
-                String password = newUser.getPassword();//传过来的明文密码
+                String password = user.getPassword();//传过来的明文密码
                 String hashPassword = CryptoUtils.getHash(password, salt);//加密的密码
-                newUser.setSalt(salt);
-                newUser.setPassword(hashPassword);
-                newUser.setNickName(newUser.getEmail());
-                if (userService.userAdd(newUser)) {
+                user.setSalt(salt);
+                user.setPassword(hashPassword);
+                user.setNickName(user.getEmail());
+                if (userService.userAdd(user)) {
                     log.debug("新建用户成功");
                 } else {
                     log.debug("新建用户失败，dao层错误");
@@ -78,12 +78,12 @@ public class PassController {
     @RequestMapping(value = SIGNIN_SUCCESS_CONTROLLER)
     public String loginSuccess(User user, RedirectAttributes attr, HttpSession session, HttpServletRequest request) {
         user = (User) session.getAttribute("user");
-        if (userService.userUpdate(user)) {
+        if (userService.userUpdateById(user)) {
             log.debug("登录信息保存成功");
         } else {
             log.debug("登录信息保存失败");
         }
-        user = userService.userDetailById(user);
+        user = userService.userFindById(user);
         session.setAttribute("user", user);
         return "redirect:/home";
     }
@@ -147,19 +147,18 @@ public class PassController {
      */
     public boolean signInFailureIsStop(User user, int id) {
         user.setId(id);
-        user = userService.userDetailById(user);
+        user = userService.userFindById(user);
         int alreadyFailureCount = user.getLoginFailureCount();
         newFailureCount = alreadyFailureCount + 1;
         if (newFailureCount > SIGNIN_FAILURE_THRESHOLD) {
             log.debug("登录失败次数大于阈值: " + newFailureCount);
             user.setIsStop(1);
-            userService.userUpdate(user);
+            userService.userUpdateById(user);
             return true;
         }
         log.debug("登录失败加一后: " + newFailureCount);
         user.setLoginFailureCount(newFailureCount);
-        userService.userUpdateLoginFailure(user);
-        user.setLoginFailureCount(newFailureCount);
+        userService.userUpdateById(user);
         return false;
     }
 }
