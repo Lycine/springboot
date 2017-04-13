@@ -84,7 +84,10 @@
         <if test="user.lastTime!=null">
             last_time = #{user.lastTime,jdbcType=TIMESTAMP},
         </if>
-        login_failure_count = 0
+        <if test="user.loginFailureCount!=null and user.loginFailureCount!=-1">
+            login_failure_count = #{user.loginFailureCount},
+        </if>
+        id = #{user.id}
         WHERE id = #{user.id};
     </update>
 

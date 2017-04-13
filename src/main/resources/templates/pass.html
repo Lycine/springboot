@@ -13,6 +13,7 @@
   <script src="/webjars/jquery/2.1.1/jquery.min.js"></script>
 </head>
 <body>
+
 <nav class="navbar navbar-default">
   <div class="container">
     <div class="col-ld-6 col-ld-offset-3">
@@ -25,19 +26,22 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="#">Brand</a>
+        <a class="navbar-brand" href="#">北信科校园网流量分析系统</a>
       </div>
-
-      <!-- Collect the nav links, forms, and other content for toggling -->
-      <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-        <ul class="nav navbar-nav">
-          <li class="active"><a href="#">Link3 <span class="sr-only">(current)</span></a></li>
-          <li><a href="#">Link1</a></li>
-        </ul>
-        <ul class="nav navbar-nav navbar-right">
-          <li><a href="#">Link2</a></li>
-        </ul>
-      </div><!-- /.navbar-collapse -->
+      <div sec:authorize="isAuthenticated()">
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="#">HTTP仪表盘 <span class="sr-only">(current)</span></a></li>
+            <li><a href="#">DNS仪表盘</a></li>
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="#"><span class="glyphicon glyphicon-user"
+                                  aria-hidden="true"></span><span th:text="' '+${user.nickName}"> user</span></a></li>
+            <li><a href="/pass/logout">注销</a></li>
+          </ul>
+        </div><!-- /.navbar-collapse -->
+      </div>
     </div>
   </div><!-- /.container-fluid -->
 </nav>
@@ -55,59 +59,65 @@
       <div class="panel panel-default"
            style="border: 1px solid rgba(1, 2, 2, 0.1);border-radius: 4px;box-shadow: 0 15px 25px rgba(1, 2, 2, 0.1);padding: 20px 20px;">
         <div class="" style="padding: 10px 15px;">
-          <h3 class="panel-title">Sign in</h3>
+          <h3 class="panel-title">登录</h3>
         </div>
         <div class="panel-body">
           <form th:action="@{/pass/signIn}" method="post" id="signInForm">
             <fieldset>
               <div class="form-group">
-                <input class="form-control" placeholder="Username" name="username" type="text"/>
+                <input class="form-control" placeholder="电子邮箱／手机号" name="username" type="text"/>
               </div>
               <div class="form-group">
-                <input class="form-control" placeholder="Password" name="password" type="password" value=""/>
+                <input class="form-control" placeholder="密码" name="password" type="password" value=""/>
               </div>
-              <div class="alert alert-danger alert-dismissible" role="alert" th:if="${param.signInFailed} ">
+              <div class="alert alert-danger alert-dismissible" role="alert" th:if="${param.normalFailure} ">
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
-                <span>用户名或密码错误</span>
+                <span>用户名或密码错误。</span>
                 <span th:if="${param.count}">
-                  <span th:text="'，登录错误次数大于5会锁定账户，当前登录错误次数'+${param.count[0]}"></span>
+                  <span th:text="'登录错误次数大于5会锁定账户，当前登录错误次数'+${param.count[0]}"></span>
                 </span>
               </div>
-              <div class="alert alert-danger alert-dismissible" role="alert" th:if="${param.signInDelete} ">
+              <div class="alert alert-danger alert-dismissible" role="alert" th:if="${param.deleteed} ">
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
-                <span>当前用户已删除</span>
+                <span>当前用户已删除。</span>
               </div>
-              <div class="alert alert-danger alert-dismissible" role="alert" th:if="${param.signInLock} ">
+              <div class="alert alert-danger alert-dismissible" role="alert" th:if="${param.locked} ">
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
-                <span>当前用户已被锁</span>
+                <span>当前用户已被锁。</span>
+              </div>
+              <div class="alert alert-danger alert-dismissible" role="alert" th:if="${param.unknownError} ">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+                <span>未知错误。</span>
               </div>
               <div class="alert alert-danger alert-dismissible autoDismiss" role="alert" th:if="${param.signInFirst} ">
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
-                <span>Please sign in first.</span>
+                <span>请先登录。</span>
               </div>
               <div class="alert alert-success alert-dismissible autoDismiss" role="alert"
                    th:if="${param.logoutSuccess} ">
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
-                <span>Log out success.</span>
+                <span>注销成功。</span>
               </div>
               <div class="form-group">
-                <input class="btn btn-lg btn-primary d btn-block" type="submit" value="sign in"/>
+                <input class="btn btn-lg btn-primary d btn-block" type="submit" value="登录"/>
               </div>
               <div class="form-group">
-                Don't have an account? <a href="/pass?register">register</a>
+                没有账户？<a href="/pass?register">立即注册</a>
               </div>
               <div class="form-group">
-                <a href="/pass?forgetPassword">Forgot your password?</a>
+                <a href="/pass?forgetPassword">忘记密码？</a>
               </div>
             </fieldset>
           </form>
@@ -123,49 +133,52 @@
       <div class="panel panel-default"
            style="border: 1px solid rgba(1, 2, 2, 0.1);border-radius: 4px;box-shadow: 0 15px 25px rgba(1, 2, 2, 0.1);padding: 20px 20px;">
         <div class="" style="padding: 10px 15px;">
-          <h3 class="panel-title">Register</h3>
+          <h3 class="panel-title">注册</h3>
         </div>
         <div class="panel-body">
           <form th:action="@{/pass/register}" method="post" id="registerForm">
             <fieldset>
               <div class="form-group">
-                <input class="form-control" placeholder="Email" name="email" type="text"/>
+                <input class="form-control" placeholder="电子邮箱" name="email" type="text"/>
               </div>
               <div class="form-group">
-                <input class="form-control" placeholder="Password" name="password" type="password" value=""/>
+                <input class="form-control" placeholder="密码" name="password" type="password" value=""/>
               </div>
               <div class="form-group">
-                <input class="form-control" placeholder="Re-enter password" name="passwordCheck" type="password"
-                       value=""/>
+                <input class="form-control" placeholder="重复密码" name="passwordCheck" type="password" value=""/>
               </div>
-              <div th:if="${param.registerFailed}">
-                <div class="alert alert-danger alert-dismissible" role="alert" th:if="${param.registerFailed[0]} eq 0 ">
-                  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
-                  <span>Register failed, server error.</span>
-                </div>
-                <div class="alert alert-danger alert-dismissible" role="alert" th:if="${param.registerFailed[0]} eq 1 ">
-                  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
-                  <span>This email is already registered.</span>
-                </div>
+              <div class="alert alert-danger alert-dismissible" role="alert" th:if="${param.unknownError}">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+                <span>注册失败，未知错误。</span>
+              </div>
+              <div class="alert alert-danger alert-dismissible" role="alert" th:if="${param.duplicatedEmail}">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+                <span>该邮箱已经注册，<a href="/pass?signIn">立即登录</a></span>
+              </div>
+              <div class="alert alert-danger alert-dismissible" role="alert" th:if="${param.wrongFormat}">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+                <span>邮箱或密码格式有误。</span>
               </div>
               <div class="alert alert-success alert-dismissible" role="alert" th:if="${param.success}">
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
-                <span>Register success, <a href="/pass?signIn">sign in</a>.</span>
+                <span>注册成功, <a href="/pass?signIn">立即登录</a></span>
               </div>
               <div class="form-group">
-                <input class="btn btn-lg btn-primary d btn-block" type="submit" value="register"/>
+                <input class="btn btn-lg btn-primary d btn-block" type="submit" value="注册"/>
               </div>
               <div class="form-group">
-                Already have an account? <a href="/pass?signIn">sign in</a>
+                已有账户? <a href="/pass?signIn">立即登录</a>
               </div>
               <div class="form-group">
-                <a href="/pass?forgetPassword">Forgot your password?</a>
+                <a href="/pass?forgetPassword">忘记密码？</a>
               </div>
             </fieldset>
           </form>
@@ -181,22 +194,22 @@
       <div class="panel panel-default"
            style="border: 1px solid rgba(1, 2, 2, 0.1);border-radius: 4px;box-shadow: 0 15px 25px rgba(1, 2, 2, 0.1);padding: 20px 20px;">
         <div class="" style="padding: 10px 15px;">
-          <h3 class="panel-title">Forget password</h3>
+          <h3 class="panel-title">忘记密码</h3>
         </div>
         <div class="panel-body">
           <form th:action="@{/pass/forgetPassword}" method="post" id="forgetPasswordForm">
             <fieldset>
               <div class="form-group">
-                <input class="form-control" placeholder="Email" name="email" type="email"/>
+                <input class="form-control" placeholder="电子邮箱" name="email" type="text"/>
               </div>
               <div class="form-group">
-                <input class="btn btn-lg btn-primary d btn-block" type="submit" value="sign in"/>
+                <input class="btn btn-lg btn-primary d btn-block" type="submit" value="发送验证邮件"/>
               </div>
               <div class="form-group">
-                Don't have an account? <a href="/pass?register">register</a>
+                没有账户？<a href="/pass?register">立即注册</a>
               </div>
               <div class="form-group">
-                Already have an account? <a href="/pass?signIn">sign in</a>
+                已有账户？<a href="/pass?signIn">立即登录</a>
               </div>
             </fieldset>
           </form>
@@ -207,103 +220,8 @@
 </div>
 <script src="/webjars/jquery/2.1.1/jquery.min.js"></script>
 <script src="/webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<script src="/js/home.js"></script>
 <script src="/webjars/bootstrapvalidator/0.5.3/js/bootstrapValidator.min.js"></script>
-<script>
-    $(function () {/* 文档加载，执行一个函数*/
-        $('#signInForm')
-            .bootstrapValidator({
-                message: 'This value is not valid',
-                feedbackIcons: {
-                  /*input状态样式图片*/
-                    valid: 'glyphicon glyphicon-ok',
-                    invalid: 'glyphicon glyphicon-remove',
-                    validating: 'glyphicon glyphicon-refresh'
-                },
-                fields: {
-                  /*验证：规则*/
-                    username: {//验证input项：验证规则
-                        message: 'The username is not valid',
-                        validators: {
-                            notEmpty: {//非空验证：提示消息
-                                message: '用户名不能为空'
-                            }
-                        }
-                    },
-                    password: {
-                        message: '密码无效',
-                        validators: {
-                            notEmpty: {
-                                message: '密码不能为空'
-                            }
-                        }
-                    }
-                }
-            })
-    });
-</script>
-<script>
-    $(function () {/* 文档加载，执行一个函数*/
-        $('#registerForm')
-            .bootstrapValidator({
-                message: 'This value is not valid',
-                feedbackIcons: {
-                  /*input状态样式图片*/
-                    valid: 'glyphicon glyphicon-ok',
-                    invalid: 'glyphicon glyphicon-remove',
-                    validating: 'glyphicon glyphicon-refresh'
-                },
-                fields: {
-                  /*验证：规则*/
-                    password: {
-                        validators: {
-                            notEmpty: {
-                                message: '密码不能为空'
-                            },
-                            stringLength: {
-                                min: 6,
-                                max: 20,
-                                message: '密码长度必须在6到20之间'
-                            },
-                            identical: {//相同
-                                field: 'password', //需要进行比较的input name值
-                                message: '两次密码不一致'
-                            },
-                            different: {//不能和用户名相同
-                                field: 'email',//需要进行比较的input name值
-                                message: '不能和邮箱相同'
-                            },
-                            regexp: {
-                                regexp: /^[a-zA-Z0-9_\.]+$/,
-                                message: 'The username can only consist of alphabetical, number, dot and underscore'
-                            }
-                        }
-                    },
-                    passwordCheck: {
-                        validators: {
-                            notEmpty: {
-                                message: '密码不能为空'
-                            },
-                            identical: {//相同
-                                field: 'password', //需要进行比较的input name值
-                                message: '两次密码不一致'
-                            }
-                        }
-                    },
-                    email: {
-                        validators: {
-                            notEmpty: {
-                                message: '邮箱不能为空'
-                            },
-                            regexp: {
-                                regexp: /^(\w)+(\.\w+)*@(\w)+((\.\w+)+)$/,
-                                message: '邮箱格式不正确'
-                            }
-                        }
-                    }
-                }
-            })
-    });
-</script>
+<script src="/js/myHome.js"></script>
+<script src="/js/pass.js"></script>
 </body>
 </html>

@@ -3,7 +3,6 @@ package com.artbrain.security;
 import com.artbrain.dao.UserDao;
 import com.artbrain.entity.User;
 import com.artbrain.service.UserService;
-import com.artbrain.service.impl.UserServiceImpl;
 import lombok.extern.apachecommons.CommonsLog;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,7 +10,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
+import static com.artbrain.util.Global.SIGNIN_FAILURE_USERSTOP_CODE;
+import static com.artbrain.util.Global.SIGNIN_FAILURE_USERNOTFOUND_CODE;
 
 
 /**
@@ -40,8 +40,8 @@ public class MyUserDetailsService implements UserDetailsService {
         user.setEmail(username);
         user = userService.loadUserByUsername(user);
         if (null == user) {
-            log.debug("未找到用户: " + username);
-            throw new UsernameNotFoundException("未找到用户");
+            log.debug("未找到用户code:" + SIGNIN_FAILURE_USERNOTFOUND_CODE + ".id:0");
+            throw new UsernameNotFoundException("用户已停用code:" + SIGNIN_FAILURE_USERSTOP_CODE + ".id:0");
         }
         return new MyUserDetails(user);
     }

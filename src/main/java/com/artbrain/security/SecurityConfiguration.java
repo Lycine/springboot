@@ -2,14 +2,10 @@ package com.artbrain.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.stereotype.Component;
 
 import static com.artbrain.util.Global.*;
 
@@ -37,14 +33,14 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/teacher/**").hasAuthority("ROLE_TEACHER")//user角色访问权限
                 .anyRequest().authenticated()
                 .and()
-                .formLogin().loginPage(SIGNIN_PAGE)
+                .formLogin().loginPage(SIGNIN_PAGE_SIGNINFIRST)
                 .failureHandler(new LoginFailureHandler())
-                .loginProcessingUrl(SIGNIN_PROCESSIN_URL)
+                .loginProcessingUrl(SIGNIN_PROCESSIN_CONTROLLER)
                 .usernameParameter("username")//email,loginname,phonenumber
                 .passwordParameter("password")
                 .successHandler(new LoginSuccessHandler()).permitAll()
                 .and()
-                .logout().logoutUrl(LOGOUT_URL)
+                .logout().logoutUrl(LOGOUT_PROCESSIN_CONTROLLER)
                 .logoutSuccessUrl(LOGOUT_SUCCESS_URL)
                 .invalidateHttpSession(true);
     }

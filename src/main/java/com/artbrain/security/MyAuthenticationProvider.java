@@ -14,9 +14,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Collection;
 
-import static com.artbrain.util.Global.SECURITY_CODE_USERDELETE;
-import static com.artbrain.util.Global.SECURITY_CODE_USERSTOP;
-import static com.artbrain.util.Global.SECURITY_CODE_WRONGPASSWORD;
+import static com.artbrain.util.Global.*;
 
 /**
  * Created by hongyu on 2017/4/7.
@@ -43,27 +41,27 @@ public class MyAuthenticationProvider implements AuthenticationProvider {
         MyUserDetails user = (MyUserDetails) myUserDetailsService.loadUserByUsername(username);
 
         if (user == null) {
-            log.debug("未找到用户");
-            throw new BadCredentialsException("未找到用户");
+            log.debug("未找到用户code:" + SIGNIN_FAILURE_USERNOTFOUND_CONTROLLER + ".id:0");
+            throw new BadCredentialsException("用户已停用code:" + SIGNIN_FAILURE_USERSTOP_CODE + ".id:0");
         }
 
         //查看用户是否停用
         if (user.getIsDel() == 1) {
-            log.debug("用户已停用code:" + SECURITY_CODE_USERSTOP + ".id:" + user.getId());
-            throw new BadCredentialsException("用户已停用code:" + SECURITY_CODE_USERSTOP + ".id:" + user.getId());
+            log.debug("用户已停用code:" + SIGNIN_FAILURE_USERSTOP_CODE + ".id:" + user.getId());
+            throw new BadCredentialsException("用户已停用code:" + SIGNIN_FAILURE_USERSTOP_CODE + ".id:" + user.getId());
         }
         //查看用户是否删除
         if (user.getIsStop() == 1) {
-            log.debug("用户已逻辑删除code:" + SECURITY_CODE_USERDELETE + ".id:" + user.getId());
-            throw new BadCredentialsException("用户已逻辑删除code:" + SECURITY_CODE_USERDELETE + ".id:" + user.getId());
+            log.debug("用户已逻辑删除code:" + SIGNIN_FAILURE_USERDELETE_CODE + ".id:" + user.getId());
+            throw new BadCredentialsException("用户已逻辑删除code:" + SIGNIN_FAILURE_USERDELETE_CODE + ".id:" + user.getId());
         }
 
         //验证密码
         String hashPassword = user.getPassword();
         String salt = user.getSalt();
         if (!CryptoUtils.verify(hashPassword, password, salt)) {
-            log.debug("密码不匹配code:" + SECURITY_CODE_WRONGPASSWORD + ".id:" + user.getId());
-            throw new BadCredentialsException("密码不匹配code:" + SECURITY_CODE_WRONGPASSWORD + ".id:" + user.getId());
+            log.debug("密码不匹配code:" + SIGNIN_FAILURE_WRONGPASSWORD_CODE + ".id:" + user.getId());
+            throw new BadCredentialsException("密码不匹配code:" + SIGNIN_FAILURE_WRONGPASSWORD_CODE + ".id:" + user.getId());
         }
 
         //查看用户对应权限
