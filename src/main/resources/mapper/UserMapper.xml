@@ -130,4 +130,10 @@
         <include refid="Base_Column_Alias_List"/>
         FROM user WHERE phone_number = #{user.phoneNumber};
     </select>
+
+    <select id="selectUserByNickName" parameterType="com.artbrain.entity.User" resultType="com.artbrain.entity.User">
+        SELECT
+        <include refid="Base_Column_Alias_List"/>
+        FROM user WHERE nick_name = #{user.nickName};
+    </select>
 </mapper>

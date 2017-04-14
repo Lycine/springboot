@@ -55,6 +55,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public Boolean isDuplicateNickName(User user) {
+        user = userDao.selectUserByNickName(user);
+        return null != user;
+    }
+
+    @Override
     public Boolean userAdd(User user) {
         int effect_row = userDao.addUserById(user);
         return effect_row > 0;

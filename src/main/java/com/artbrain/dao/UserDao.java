@@ -51,4 +51,13 @@ public interface UserDao {
      * @return
      */
     User selectUserByPhoneNumber(User user);
+
+    /**
+     * 查重昵称
+     * 更新昵称时查看数据库中昵称是否已用过
+     *
+     * @param user
+     * @return
+     */
+    User selectUserByNickName(User user);
 }

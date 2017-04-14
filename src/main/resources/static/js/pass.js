@@ -1,7 +1,6 @@
 $(function () {
     $('#signInForm')
         .bootstrapValidator({
-            message: 'This value is not valid',
             feedbackIcons: {
                 /*input状态样式图片*/
                 valid: 'glyphicon glyphicon-ok',

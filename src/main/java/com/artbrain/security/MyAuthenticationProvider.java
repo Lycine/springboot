@@ -62,6 +62,9 @@ public class MyAuthenticationProvider implements AuthenticationProvider {
         //验证密码
         String hashPassword = user.getPassword();
         String salt = user.getSalt();
+        log.debug("hashPassword: " + hashPassword);
+        log.debug("password: " + password);
+        log.debug("salt: " + salt);
         if (!CryptoUtils.verify(hashPassword, password, salt)) {
             log.debug("密码不匹配code:" + SIGNIN_FAILURE_WRONGPASSWORD_CODE + ".id:" + user.getId());
             throw new BadCredentialsException("密码不匹配code:" + SIGNIN_FAILURE_WRONGPASSWORD_CODE + ".id:" + user.getId());
