@@ -85,7 +85,7 @@
         WHERE id = #{user.id};
     </update>
 
-    <insert id="addUserById" parameterType="com.artbrain.entity.User">
+    <insert id="addUser" parameterType="com.artbrain.entity.User">
         INSERT INTO user (
         <if test="user.password!=null and user.password!=''">
             password,
@@ -136,4 +136,11 @@
         <include refid="Base_Column_Alias_List"/>
         FROM user WHERE nick_name = #{user.nickName};
     </select>
+
+    <select id="selectAllUser" resultType="com.artbrain.entity.User">
+        SELECT
+        <include refid="Base_Column_Alias_List"/>
+        FROM user
+    </select>
+
 </mapper>

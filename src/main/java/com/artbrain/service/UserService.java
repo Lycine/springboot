@@ -2,6 +2,8 @@ package com.artbrain.service;
 
 import com.artbrain.entity.User;
 
+import java.util.List;
+
 /**
  * Created by hongyu on 2017/1/15.
  */
@@ -24,6 +26,14 @@ public interface UserService {
      */
     User userFindById(User user);
 
+    /**
+     * 查找用户所有信息
+     * 根据用户email查找该用户所有信息
+     *
+     * @param user
+     * @return
+     */
+     User userFindByEmail(User user);
     /**
      * 查重邮箱
      * 更新邮箱时查看数据库中邮箱是否已用过
@@ -50,7 +60,7 @@ public interface UserService {
      * @return
      */
     Boolean isDuplicateNickName(User user);
-    
+
     /**
      * 新增用户
      *
@@ -67,4 +77,13 @@ public interface UserService {
      * @return
      */
     User loadUserByUsername(User user);
+
+    /**
+     * 查找所有用户
+     *
+     * @param page
+     * @param rows
+     * @return
+     */
+    List<User> userFindAll(int page, int rows);
 }

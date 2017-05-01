@@ -4,6 +4,7 @@ package com.artbrain.util;
  * 全局配置类
  */
 public class Global {
+    public static final String HOSTNAME_AND_PORT = "localhost:8082";
     /**
      * 登录失败失败次数阈值
      */
@@ -35,7 +36,7 @@ public class Global {
      * 未知错误
      * CODE
      */
-    public static final int SIGNIN_FAILURE_UNKWON_CODE = 104;
+    public static final int SIGNIN_FAILURE_UNKNOWN_CODE = 104;
 
     /**
      * 登录失败
@@ -51,6 +52,12 @@ public class Global {
     public static final String SIGNIN_PROCESSIN_CONTROLLER = "/pass/signIn";
 
     /**
+     * 处理激活账户
+     * CONTROLLER
+     */
+    public static final String ACTIVE_ACCOUNT_PROCESSIN_CONTROLLER = "/pass/signIn/active";
+
+    /**
      * 处理注销
      * CONTROLLER
      */
@@ -61,6 +68,18 @@ public class Global {
      * CONTROLLER
      */
     public static final String REGISTER_PROCESSIN_CONTROLLER = "/pass/register";
+
+    /**
+     * 处理忘记密码发送链接邮件
+     * CONTROLLER
+     */
+    public static final String FORGET_PASSWORD_SEND_EMAIL_CONTROLLER = "/pass/forgetPassword";
+
+    /**
+     * 处理忘记密码链接邮件
+     * CONTROLLER
+     */
+    public static final String FORGET_PASSWORD_RESET_PASSWORD_BY_LINK_CONTROLLER = "/pass/forgetPassword/resetByLink";
 
     /**
      * 注销成功
@@ -88,7 +107,7 @@ public class Global {
      * 未知错误
      * CONTROLLER
      */
-    public static final String SIGNIN_FAILURE_UNKWON_CONTROLLER = SIGNIN_FAILURE_CONTROLLER + SIGNIN_FAILURE_UNKWON_CODE + "/0";
+    public static final String SIGNIN_FAILURE_UNKNOWN_CONTROLLER = SIGNIN_FAILURE_CONTROLLER + SIGNIN_FAILURE_UNKNOWN_CODE + "/0";
 
     /**
      * 登录失败
@@ -149,6 +168,28 @@ public class Global {
 
     /**
      * 登录页面
+     * （激活失败，链接错误）
+     * html模版
+     */
+    public static final String SIGNIN_PAGE_ACTIVE_ERRORLINK = "/pass?signIn&active&errorLink";
+
+    /**
+     * 登录页面
+     * （激活成功）
+     * html模版
+     */
+    public static final String SIGNIN_PAGE_ACTIVE_SUCCESS = "/pass?signIn&active&success";
+
+    /**
+     * 登录页面
+     * （激活失败，未知错误）
+     * html模版
+     */
+    public static final String SIGNIN_PAGE_ACTIVE_UNKNOWN = "/pass?signIn&active&unknown";
+
+
+    /**
+     * 登录页面
      * （登录失败，没找到用户）
      * html模版
      */
@@ -190,6 +231,13 @@ public class Global {
 
     /**
      * 注册页面
+     * （成功）
+     * html模版
+     */
+    public static final String REGISTER_PAGE_SENDFAILURE = "/pass?register&sendFailure";
+
+    /**
+     * 注册页面
      * （注册失败，重复的邮箱）
      * html模版
      */
@@ -207,26 +255,63 @@ public class Global {
      * （注册失败，未知错误）
      * html模版
      */
-    public static final String REGISTER_PAGE_UNKWON = "/pass?register&unknownError";
+    public static final String REGISTER_PAGE_UNKNOWN = "/pass?register&unknownError";
 
     /**
      * 忘记密码页面
      * （成功，已发送邮件）
      * html模版
      */
-    public static final String FORGIVEPASSWORD_PAGE_SUCCESS = "/pass?signIn&signInFirst";
+    public static final String FORGET_PASSWORD_PAGE_SUCCESS = "/pass?forgetPassword&success";
+
+    /**
+     * 忘记密码页面
+     * （忘记密码失败，邮箱为空。一般不会出现这个错误，除非前端验证有问题）
+     * html模版
+     */
+    public static final String FORGET_PASSWORD_PAGE_EMPTYMAIL = "/pass?forgetPassword&emptyMail";
 
     /**
      * 忘记密码页面
      * （忘记密码失败，错误的邮箱格式。一般不会出现这个错误，除非前端验证有问题）
      * html模版
      */
-    public static final String FORGIVEPASSWORD_PAGE_WRONGFORMAT = "/pass?signIn&signInFirst";
+    public static final String FORGET_PASSWORD_PAGE_WRONGFORMAT = "/pass?forgetPassword&wrongFormat";
+
+    /**
+     * 忘记密码页面
+     * （忘记密码失败，错误的邮箱格式。一般不会出现这个错误，除非前端验证有问题）
+     * html模版
+     */
+    public static final String FORGET_PASSWORD_PAGE_SENDFAILURE = "/pass?forgetPassword&sendFailure";
+
 
     /**
      * 忘记密码页面
      * （忘记密码失败，没有这个账户）
      * html模版
      */
-    public static final String FORGIVEPASSWORD_PAGE_USERNOTFOUND = "/pass?signIn&signInFirst";
+    public static final String FORGET_PASSWORD_PAGE_USERNOTFOUND = "/pass?forgetPassword&normalFailure";
+
+    /**
+     * 忘记密码页面
+     * （忘记密码失败，未知错误）
+     * html模版
+     */
+    public static final String FORGET_PASSWORD_PAGE_UNKNOWN = "/pass?forgetPassword&unknownError";
+
+    /**
+     * 忘记密码页面
+     * （忘记密码失败，未知错误）
+     * html模版
+     */
+    public static final String FORGET_PASSWORD_PAGE_ERRORLINK = "/pass?forgetPassword&errorLink";
+
+    /**
+     * 忘记密码页面
+     * （忘记密码失败，token超时）
+     * html模版
+     */
+    public static final String FORGET_PASSWORD_PAGE_TOKEN_EXPIRE = "/pass?forgetPassword&tokenExpire";
+
 }

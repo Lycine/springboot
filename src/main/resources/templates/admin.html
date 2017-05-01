@@ -6,107 +6,89 @@
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
   <link href="/webjars/bootstrap/3.3.7/css/bootstrap.min.css"
         rel="stylesheet" media="screen"/>
-  <link href="/static/css/styles.css"
+  <link href="/css/styles.css"
         rel="stylesheet"
         media="screen"/>
   <link href="/webjars/bootstrapvalidator/0.5.3/css/bootstrapValidator.min.css"/>
   <script src="/webjars/jquery/2.1.1/jquery.min.js"></script>
 </head>
 <body>
-<div>admin</div>
+<!--<nav class="navbar navbar-default">-->
+  <!--<div class="container">-->
+    <!--<div class="col-ld-6 col-ld-offset-3">-->
+      <!--&lt;!&ndash; Brand and toggle get grouped for better mobile display &ndash;&gt;-->
+      <!--<div class="navbar-header">-->
+        <!--<button type="button" class="navbar-toggle collapsed" data-toggle="collapse"-->
+                <!--data-target="#bs-example-navbar-collapse-1" aria-expanded="false">-->
+          <!--<span class="sr-only">Toggle navigation</span>-->
+          <!--<span class="icon-bar"></span>-->
+          <!--<span class="icon-bar"></span>-->
+          <!--<span class="icon-bar"></span>-->
+        <!--</button>-->
+        <!--<a class="navbar-brand" href="#">北信科校园网流量分析系统</a>-->
+      <!--</div>-->
+
+      <!--&lt;!&ndash; Collect the nav links, forms, and other content for toggling &ndash;&gt;-->
+      <!--<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">-->
+        <!--<ul class="nav navbar-nav">-->
+          <!--<li class="active"><a href="#">HTTP仪表盘 <span class="sr-only">(current)</span></a></li>-->
+          <!--<li><a href="#">DNS仪表盘</a></li>-->
+          <!--<li><a href="#">DNS仪表盘</a></li>-->
+          <!--<li><a href="#">DNS仪表盘</a></li>-->
+        <!--</ul>-->
+        <!--<ul class="nav navbar-nav navbar-right">-->
+          <!--<li><a href="#"><span class="glyphicon glyphicon-user"-->
+                                <!--aria-hidden="true"></span><span th:text="' '+${session.user.nickName}"> user</span></a></li>-->
+          <!--<li><a href="/pass/logout">注销</a></li>-->
+        <!--</ul>-->
+      <!--</div>&lt;!&ndash; /.navbar-collapse &ndash;&gt;-->
+    <!--</div>-->
+  <!--</div>&lt;!&ndash; /.container-fluid &ndash;&gt;-->
+<!--</nav>-->
+<!--<div sec:authorize="hasRole('ROLE_TEACHER')">-->
+<div>
+  <div class="container">
+    <table class="table table-bordered">
+      <thead>
+      <tr>
+        <th>#</th>
+        <th>Firstname</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="p : ${pageInfo.list}">
+        <td th:text="${p.id}">Onions</td>
+        <td th:text="${p.email}">2.41</td>
+      </tr>
+      </tbody>
+    </table>
+    <nav aria-label="Page navigation">
+      <ul class="pagination">
+        <li>
+          <a href="#" aria-label="Previous">
+            <span aria-hidden="true">&laquo;</span>
+          </a>
+        </li>
+        <li><a href="#">1</a></li>
+        <li><a href="#">2</a></li>
+        <li><a href="#">3</a></li>
+        <li><a href="#">4</a></li>
+        <li><a href="#">5</a></li>
+        <li>
+          <a href="#" aria-label="Next">
+            <span aria-hidden="true">&raquo;</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+
+</div>
+
 <script src="/webjars/jquery/2.1.1/jquery.min.js"></script>
 <script src="/webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<script src="/static/js/home.js"></script>
+<script src="/js/myBasic.js"></script>
+<script src="/js/home.js"></script>
 <script src="/webjars/bootstrapvalidator/0.5.3/js/bootstrapValidator.min.js"></script>
-<script>
-    $(function () {/* 文档加载，执行一个函数*/
-        $('#defaultForm')
-            .bootstrapValidator({
-                message: 'This value is not valid',
-                feedbackIcons: {
-                  /*input状态样式图片*/
-                    valid: 'glyphicon glyphicon-ok',
-                    invalid: 'glyphicon glyphicon-remove',
-                    validating: 'glyphicon glyphicon-refresh'
-                },
-                fields: {
-                  /*验证：规则*/
-                    username: {//验证input项：验证规则
-                        message: 'The username is not valid',
-
-                        validators: {
-                            notEmpty: {//非空验证：提示消息
-                                message: '用户名不能为空'
-                            },
-                            stringLength: {
-                                min: 6,
-                                max: 30,
-                                message: '用户名长度必须在6到30之间'
-                            },
-                            threshold: 6, //有6字符以上才发送ajax请求，（input中输入一个字符，插件会向服务器发送一次，设置限制，6字符以上才开始）
-                            remote: {//ajax验证。server result:{"valid",true or false} 向服务发送当前input name值，获得一个json数据。例表示正确：{"valid",true}
-                                url: 'exist2.do',//验证地址
-                                message: '用户已存在',//提示消息
-                                delay: 2000,//每输入一个字符，就发ajax请求，服务器压力还是太大，设置2秒发送一次ajax（默认输入一个字符，提交一次，服务器压力太大）
-                                type: 'POST'//请求方式
-                                /**自定义提交数据，默认值提交当前input value
-                                 *  data: function(validator) {
-                               return {
-                                   password: $('[name="passwordNameAttributeInYourForm"]').val(),
-                                   whatever: $('[name="whateverNameAttributeInYourForm"]').val()
-                               };
-                            }
-                                 */
-                            },
-                            regexp: {
-                                regexp: /^[a-zA-Z0-9_\.]+$/,
-                                message: '用户名由数字字母下划线和.组成'
-                            }
-                        }
-                    },
-                    password: {
-                        message: '密码无效',
-                        validators: {
-                            notEmpty: {
-                                message: '密码不能为空'
-                            },
-                            stringLength: {
-                                min: 6,
-                                max: 30,
-                                message: '用户名长度必须在6到30之间'
-                            },
-                            identical: {//相同
-                                field: 'password', //需要进行比较的input name值
-                                message: '两次密码不一致'
-                            },
-                            different: {//不能和用户名相同
-                                field: 'username',//需要进行比较的input name值
-                                message: '不能和用户名相同'
-                            },
-                            regexp: {
-                                regexp: /^[a-zA-Z0-9_\.]+$/,
-                                message: 'The username can only consist of alphabetical, number, dot and underscore'
-                            }
-                        }
-                    }
-                }
-            })
-            .on('success.form.bv', function (e) {//点击提交之后
-                // Prevent form submission
-                e.preventDefault();
-
-                // Get the form instance
-                var $form = $(e.target);
-
-                // Get the BootstrapValidator instance
-                var bv = $form.data('bootstrapValidator');
-
-                // Use Ajax to submit form data 提交至form标签中的action，result自定义
-                $.post($form.attr('action'), $form.serialize(), function (result) {
-//do something...
-                });
-            });
-    });
-</script>
 </body>
 </html>

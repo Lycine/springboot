@@ -1,7 +1,7 @@
 package com.artbrain.security;
 
 
-import com.artbrain.util.CryptoUtils;
+import com.artbrain.util.encryptAndDecode.CryptoUtils;
 import lombok.extern.apachecommons.CommonsLog;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;

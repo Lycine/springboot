@@ -3,14 +3,11 @@ package com.artbrain.service.impl;
 import com.artbrain.dao.UserDao;
 import com.artbrain.entity.User;
 import com.artbrain.service.UserService;
+import com.github.pagehelper.PageHelper;
 import lombok.extern.apachecommons.CommonsLog;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -36,9 +33,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User userFindById(User user) {
-        System.out.println("old: " + user);
         user = userDao.selectUserById(user);
-        System.out.println("new: " + user);
+        return user;
+    }
+
+    @Override
+    public User userFindByEmail(User user) {
+        user = userDao.selectUserByEmail(user);
         return user;
     }
 
@@ -62,7 +63,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Boolean userAdd(User user) {
-        int effect_row = userDao.addUserById(user);
+        int effect_row = userDao.addUser(user);
         return effect_row > 0;
     }
 
@@ -74,5 +75,11 @@ public class UserServiceImpl implements UserService {
             resultuser = userDao.selectUserByPhoneNumber(user);
         }
         return resultuser;
+    }
+
+    @Override
+    public List<User> userFindAll(int page, int rows) {
+        PageHelper.startPage(page, rows);
+        return userDao.selectAllUser();
     }
 }

@@ -3,7 +3,7 @@ package com.artbrain.controller;
 import com.artbrain.entity.Msg;
 import com.artbrain.entity.User;
 import com.artbrain.service.UserService;
-import com.artbrain.util.CryptoUtils;
+import com.artbrain.util.encryptAndDecode.CryptoUtils;
 import com.artbrain.util.Validator;
 import lombok.extern.apachecommons.CommonsLog;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +25,6 @@ public class UserController {
 
     @RequestMapping(value = "/home")
     public String home(User user, Model model, HttpSession session, HttpServletRequest request) {
-
         user = (User) session.getAttribute("user");
         model.addAttribute("user", user);
         return "home";

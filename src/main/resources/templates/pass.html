@@ -87,6 +87,18 @@
                   <span th:text="'登录错误次数大于5会锁定账户，当前登录错误次数'+${param.count[0]}"></span>
                 </span>
               </div>
+              <div class="alert alert-danger alert-dismissible" role="alert" th:if="${param.errorLink!=null and param.active!=null}">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+                <span>链接存在问题，激活失败，请重新操作， <a href="/pass?signIn">立即注册</a></span>
+              </div>
+              <div class="alert alert-danger alert-dismissible" role="alert" th:if="${param.unkwon!=null and param.active!=null}">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+                <span>激活失败</span>
+              </div>
               <div class="alert alert-danger alert-dismissible" role="alert" th:if="${param.deleteed} ">
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
@@ -110,6 +122,12 @@
                   <span aria-hidden="true">&times;</span>
                 </button>
                 <span>请先登录。</span>
+              </div>
+              <div class="alert alert-success alert-dismissible" role="alert" th:if="${param.success!=null and param.active!=null}">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+                <span>激活成功，请登录。</span>
               </div>
               <div class="alert alert-success alert-dismissible autoDismiss" role="alert"
                    th:if="${param.logoutSuccess} ">
@@ -173,11 +191,17 @@
                 </button>
                 <span>邮箱或密码格式有误。</span>
               </div>
+              <div class="alert alert-danger alert-dismissible" role="alert" th:if="${param.sendFailure}">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+                <span>激活账户邮件发送失败，请联系管理员</span>
+              </div>
               <div class="alert alert-success alert-dismissible" role="alert" th:if="${param.success}">
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
-                <span>注册成功, <a href="/pass?signIn">立即登录</a></span>
+                <span>注册成功，请查看邮箱并激活。</span>
               </div>
               <div class="form-group">
                 <input class="btn btn-lg btn-primary d btn-block" type="submit" value="注册"/>
@@ -196,7 +220,7 @@
   </div>
 </div>
 　　
-<div class="container" th:if="${param.forgetPassword}">
+<div class="container" th:if="${param.forgetPassword!=null and param.token==null and param.uid==null}">
   <div class="row vertical-offset-100">
     <div class="col-md-4 col-md-offset-4">
       <div class="panel panel-default"
@@ -213,6 +237,42 @@
               <div class="form-group">
                 <input class="btn btn-lg btn-primary d btn-block" type="submit" value="发送验证邮件"/>
               </div>
+              <div class="alert alert-danger alert-dismissible" role="alert" th:if="${param.unknownError}">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+                <span>申请重置密码失败，未知错误，请重新操作, <a href="/pass?forgetPassword">忘记密码？</a></span>
+              </div>
+              <div class="alert alert-danger alert-dismissible" role="alert" th:if="${param.normalFailure}">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+                <span>申请重置密码失败，该邮箱未注册，<a href="/pass?register">立即注册</a></span>
+              </div>
+              <div class="alert alert-danger alert-dismissible" role="alert" th:if="${param.wrongFormat}">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+                <span>申请重置密码失败，邮箱格式有误。</span>
+              </div>
+              <div class="alert alert-danger alert-dismissible" role="alert" th:if="${param.emptyMail}">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+                <span>申请重置密码失败，邮箱未填写。</span>
+              </div>
+              <div class="alert alert-success alert-dismissible" role="alert" th:if="${param.success}">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+                <span>重置密码邮件发送成功，请查看邮箱。</span>
+              </div>
+              <div class="alert alert-success alert-dismissible" role="alert" th:if="${param.sendFailure}">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+                <span>重置密码邮件发送失败，请联系管理员</span>
+              </div>
               <div class="form-group">
                 没有账户？<a href="/pass?register">立即注册</a>
               </div>
@@ -225,6 +285,76 @@
       </div>
     </div>
   </div>
+</div>
+<div th:if="${param.forgetPassword != null and param.token!=null and param.uid!=null}">
+  <div class="row vertical-offset-100">
+    <div class="col-md-4 col-md-offset-4">
+      <div class="panel panel-default"
+           style="border: 1px solid rgba(1, 2, 2, 0.1);border-radius: 4px;box-shadow: 0 15px 25px rgba(1, 2, 2, 0.1);padding: 20px 20px;">
+        <div class="" style="padding: 10px 15px;">
+          <h3 class="panel-title">设置新密码</h3>
+        </div>
+        <div class="panel-body">
+          <form th:action="@{/pass/forgetPassword/resetByLink}" method="post" id="resetPasswordForm">
+            <fieldset>
+              <div hidden="true" class="form-group">
+                <input class="form-control" name="uid" th:value="${param.uid[0]}" value="" type="text"/>
+              </div>
+              <div hidden="true" class="form-group">
+                <input class="form-control" name="token" th:value="${param.token[0]}" value="" type="text"/>
+              </div>
+              <div class="form-group">
+                <input class="form-control" placeholder="密码" name="password" type="password" value=""/>
+              </div>
+              <div class="form-group">
+                <input class="form-control" placeholder="重复密码" name="passwordCheck" type="password" value=""/>
+              </div>
+              <div class="alert alert-danger alert-dismissible" role="alert" th:if="${param.unknownError}">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+                <span>重置密码失败，未知错误，请重新操作，<a href="/pass?forgetPassword">忘记密码？</a></span>
+              </div>
+              <div class="alert alert-danger alert-dismissible" role="alert" th:if="${param.normalFailure}">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+                <span>重置密码失败，该邮箱未注册，<a href="/pass?register">立即注册</a></span>
+              </div>
+              <div class="alert alert-danger alert-dismissible" role="alert" th:if="${param.wrongFormat}">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+                <span>密码格式有误，请重新操作， <a href="/pass?forgetPassword">忘记密码？</a></span>
+              </div>
+              <div class="alert alert-danger alert-dismissible" role="alert" th:if="${param.tokenExpire}">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+                <span>链接已失效，请重新操作， <a href="/pass?forgetPassword">忘记密码？</a></span>
+              </div>
+              <div class="alert alert-danger alert-dismissible" role="alert" th:if="${param.errorLink}">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+                <span>链接存在问题，请重新操作， <a href="/pass?forgetPassword">忘记密码？</a></span>
+              </div>
+              <div class="alert alert-success alert-dismissible" role="alert" th:if="${param.success}">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+                <span>重置密码成功, <a href="/pass?signIn">立即登录</a></span>
+              </div>
+              <div class="form-group">
+                <input class="btn btn-lg btn-primary d btn-block" type="submit" value="更新密码"/>
+              </div>
+            </fieldset>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </div>
 <script src="/webjars/jquery/2.1.1/jquery.min.js"></script>
 <script src="/webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>

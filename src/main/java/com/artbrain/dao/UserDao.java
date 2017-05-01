@@ -3,6 +3,8 @@ package com.artbrain.dao;
 
 import com.artbrain.entity.User;
 
+import java.util.List;
+
 
 /**
  * Created by hongyu on 2017/1/15.
@@ -32,7 +34,7 @@ public interface UserDao {
      * @param user
      * @return
      */
-    int addUserById(User user);
+    int addUser(User user);
 
     /**
      * 查重邮箱
@@ -60,4 +62,11 @@ public interface UserDao {
      * @return
      */
     User selectUserByNickName(User user);
+
+    /**
+     * 查找全部用户
+     *
+     * @return
+     */
+    List<User> selectAllUser();
 }

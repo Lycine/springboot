@@ -50,14 +50,14 @@ public class LoginFailureHandler implements AuthenticationFailureHandler {
             }
             //未知错误
             log.debug("未知错误authE: " + authE.getMessage());
-            httpServletResponse.sendRedirect(SIGNIN_FAILURE_UNKWON_CONTROLLER);
+            httpServletResponse.sendRedirect(SIGNIN_FAILURE_UNKNOWN_CONTROLLER);
 
 
         } catch (Exception e) {
             //未知错误
             log.debug("未知错误authE: " + authE.getMessage());
             log.debug("未知错误e: " + e.getMessage());
-            httpServletResponse.sendRedirect(SIGNIN_FAILURE_UNKWON_CONTROLLER);
+            httpServletResponse.sendRedirect(SIGNIN_FAILURE_UNKNOWN_CONTROLLER);
         }
     }
 }

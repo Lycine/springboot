@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.artbrain.dao.mapper.TokenMapper">
+    <resultMap id="token" type="com.artbrain.entity.Token">
+        <id property="id" column="id" javaType="INTEGER" jdbcType="INTEGER"/>
+        <result property="token" column="token" jdbcType="VARCHAR"/>
+        <result property="master" column="token" jdbcType="VARCHAR"/>
+        <result property="addTime" column="add_time" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+        <result property="expireTime" column="expire_time" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_Alias_List">
+        id,
+        token as token,
+        master as master,
+        remark as remark,
+        add_time as addTime,
+        expire_time as expireTime,
+        add_time as addTime
+    </sql>
+    <select id="selectTokenById" parameterType="com.artbrain.entity.Token" resultType="com.artbrain.entity.Token">
+        SELECT
+        <include refid="Base_Column_Alias_List"/>
+        FROM `token` WHERE id = #{token.id};
+    </select>
+
+    <select id="selectTokenByToken" parameterType="com.artbrain.entity.Token" resultType="com.artbrain.entity.Token">
+        SELECT
+        <include refid="Base_Column_Alias_List"/>
+        FROM `token` WHERE token = #{token.token};
+    </select>
+
+    <delete id="deleteTokenById" parameterType="com.artbrain.entity.Token">
+        delete from `token` where id=#{token.id}
+    </delete>
+
+    <delete id="deleteTokenByExpireTime" parameterType="com.artbrain.entity.Token">
+        delete from `token` where expire_time &lt; CURRENT_TIMESTAMP()
+    </delete>
+
+
+    <insert id="tokenAdd" parameterType="com.artbrain.entity.Token">
+        INSERT INTO token (
+        token,
+        master,
+        remark,
+        add_time,
+        expire_time
+        ) VALUES (
+        #{token.token},
+        #{token.master},
+        #{token.remark},
+        #{token.addTime},
+        #{token.expireTime}
+        )
+
+    </insert>
+
+</mapper>

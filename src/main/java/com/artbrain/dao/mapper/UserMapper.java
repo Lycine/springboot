@@ -5,6 +5,8 @@ import com.artbrain.entity.User;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
 /**
  * Created by hongyu on 2017/1/15.
  */
@@ -37,7 +39,7 @@ public interface UserMapper extends UserDao {
      * @return
      */
     @Override
-    int addUserById(@Param("user") User user);
+    int addUser(@Param("user") User user);
 
     /**
      * 查重邮箱
@@ -68,4 +70,12 @@ public interface UserMapper extends UserDao {
      */
     @Override
     User selectUserByNickName(@Param("user") User user);
+
+    /**
+     * 查找全部用户
+     *
+     * @return
+     */
+    @Override
+    List<User> selectAllUser();
 }
