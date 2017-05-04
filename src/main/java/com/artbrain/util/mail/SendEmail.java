@@ -15,7 +15,7 @@ import java.util.Properties;
 
 @CommonsLog
 public class SendEmail {
-    public Boolean sendMailActiveAccount(String to, String link) {
+    public Boolean sendMailActiveAccount(String to, String link, String tempPassword) {
 //      设置发件人
         EmailHeader.TO = to;
 //      获取系统环境
@@ -34,13 +34,13 @@ public class SendEmail {
         Message message = new MimeMessage(session);
         try {
 //          设置邮件主题
-            message.setSubject("【校园网流量分析平台】激活邮箱");
+            message.setSubject("激活账户");
 //          设置邮件标题
             message.setHeader("Header", EmailBody.Email_Header);
 //          设置发送时间
             message.setSentDate(EmailBody.sendDate);
 //          设置发信人地址和名字
-            Address address = new InternetAddress(EmailHeader.FROM,"校园网流量分析平台");
+            Address address = new InternetAddress(EmailHeader.FROM, "ITTAC");
 //          把发件人信息添加到信息中
             message.setFrom(address);
 //          设置发件人地址
@@ -48,7 +48,7 @@ public class SendEmail {
 //          设置接收人地址
             message.setRecipient(Message.RecipientType.TO, toAddress);
             BodyPart messageBodyPart = new MimeBodyPart();
-            String emailContent = "激活账户链接：\n" + link + "\n有效期10天。\n请勿将链接透露给其他人。本邮件有系统自动发送，请勿直接回复！\n感谢您的访问,祝您使用愉快！";
+            String emailContent = "激活账户链接：\n" + link + "\n初始密码: \n"+tempPassword+"\n有效期10天。\n请勿将链接透露给其他人。本邮件由系统自动发送，请勿直接回复！\n感谢您的访问,祝您使用愉快！";
             messageBodyPart.setText(emailContent);
             log.debug(emailContent);
             Multipart multipart = new MimeMultipart();
@@ -88,13 +88,13 @@ public class SendEmail {
         Message message = new MimeMessage(session);
         try {
 //          设置邮件主题
-            message.setSubject("【校园网流量分析平台】重置密码");
+            message.setSubject("重置密码");
 //          设置邮件标题
             message.setHeader("Header", EmailBody.Email_Header);
 //          设置发送时间
             message.setSentDate(EmailBody.sendDate);
 //          设置发信人地址和名字
-            Address address = new InternetAddress(EmailHeader.FROM,"校园网流量分析平台");
+            Address address = new InternetAddress(EmailHeader.FROM, "ITTAC");
 //          把发件人信息添加到信息中
             message.setFrom(address);
 //          设置发件人地址
@@ -102,7 +102,7 @@ public class SendEmail {
 //          设置接收人地址
             message.setRecipient(Message.RecipientType.TO, toAddress);
             BodyPart messageBodyPart = new MimeBodyPart();
-            String emailContent = "重置密码链接：\n" + link + "\n有效期1天。\n请勿将链接透露给其他人。本邮件有系统自动发送，请勿直接回复！\n感谢您的访问,祝您使用愉快！";
+            String emailContent = "重置密码链接：\n" + link + "\n有效期1天。\n请勿将链接透露给其他人。本邮件由系统自动发送，请勿直接回复！\n感谢您的访问,祝您使用愉快！";
             messageBodyPart.setText(emailContent);
             log.debug(emailContent);
             Multipart multipart = new MimeMultipart();
@@ -124,7 +124,7 @@ public class SendEmail {
     }
 
     public static void main(String[] args) {
-        new SendEmail().sendMailResetPassword("petrel2015@foxmail.com","This is link!");
+        new SendEmail().sendMailResetPassword("petrel2015@foxmail.com", "This is link!");
     }
 
 }

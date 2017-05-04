@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+  <meta name="description" content="0.0.1">
+  <meta name="author" content="hongyu">
+  <link rel="icon" href="../../static/favicon.ico">
+  <title>ITTAC | 作业系统助教端</title>
+  <!-- Bootstrap -->
+  <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+  <link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+  <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+  <script src="//cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+  <script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+  <![endif]-->
+  <link rel="stylesheet" media="screen" href="../css/ittac-homework.css"/>
+  <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.css" rel="stylesheet">
+  <link href="//cdn.bootcss.com/fullcalendar/3.3.1/fullcalendar.min.css" rel="stylesheet">
+  <link href="../css/fullcalendar.print.min.css" rel="stylesheet" media="print">
+</head>
+<body>
+<div class="container">
+  <!--nav start-->
+  <div class="row">
+    <div class="col-xs-12">
+      <nav class="navbar navbar-default">
+        <div class="container-fluid">
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="tea_index.html">ITTAC | 作业系统助教端</a>
+          </div>
+          <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+              <li><a href="tea_stu_index.html">学生主页 <span class="sr-only">(current)</span></a></li>
+              <li><a href="tea_task_deployer.html">发布作业 <span class="sr-only">(current)</span></a></li>
+              <li class="active"><a href="tea_task-calender.html">任务日历 <span class="sr-only">(current)</span></a></li>
+              <li><a href="tea_task-list.html">作业列表 <span class="sr-only">(current)</span></a></li>
+              <li><a href="tea_bulletin.html">公告管理 <span class="sr-only">(current)</span></a></li>
+              <li><a href="tea_message-center.html">消息中心 <span class="sr-only">(current)</span></a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+              <form class="navbar-form navbar-left">
+                <div class="form-group" >
+                  <select id="select2_student" class="form-control" placeholder="学生名单" style="width: 150px">
+                    <optgroup label="2017春 雅思1班">
+                      <option value="1">王曼晴</option>
+                      <option value="2">滕舒尧</option>
+                      <option value="3">贾旖</option>
+                      <option value="4">吴艾凝</option>
+                    </optgroup>
+                    <optgroup label="2017春 托福1班">
+                      <option value="5">杨庆龙</option>
+                      <option value="6">葛朝</option>
+                      <option value="7">刘兆一</option>
+                      <option value="8">周子琛</option>
+                    </optgroup>
+                  </select>
+                </div>
+                <button type="submit" class="btn btn-default btn-sm">提交</button>
+              </form>
+              <!--有新消息，和用户名二选一。有新消息时显示有新消息，点击后进入消息中心。没有的话显示用户名，点击弹出模态框修改-->
+              <!--<li><a href="#"><i class="fa fa-commenting" aria-hidden="true"></i> 有新消息</a></li>-->
+              <li><a href="#" data-toggle="modal" data-target="#user-update-modal"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> 洪宇</a></li>
+              <li><a href="../login.html"><span class="glyphicon glyphicon-log-out" aria-hidden="true"></span> 注销</a></li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </div>
+  </div>
+  <!--nav end-->
+
+  <div class="row">
+    <div class="col-xs-3">
+      <div id="problem-task" class="card">
+        <span>
+            <span style="font-size: 12px;">问题作业</span>
+            <hr style="margin-top:5px">
+          </span>
+        <div>
+          <div class="alert alert-danger " role="alert" th:if="${msg.status eq 'failure'}">
+            <span th:text="${msg.content}">日期：2017-04-18 23:59</span><br>
+            <span th:text="${msg.content}">作业：口语录音topic3</span><br>
+            <span th:text="${msg.content}">原因：未按时提交</span><br>
+            <button data-toggle="modal" data-target="#pardon-modal" type="button" class="btn btn-default  btn-xs  btn-block">
+              <span>特赦</span>
+            </button>
+          </div>
+        </div>
+        <div>
+          <div class="alert alert-danger " role="alert" th:if="${msg.status eq 'failure'}">
+            <span th:text="${msg.content}">日期：2017-04-18 23:59</span><br>
+            <span th:text="${msg.content}">作业：口语录音topic3</span><br>
+            <span th:text="${msg.content}">原因：未按时提交</span><br>
+            <button data-toggle="modal" data-target="#pardon-modal" type="button" class="btn btn-default  btn-xs  btn-block">
+              <span>特赦</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-9">
+      <div>
+        <div id='calendar'></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="user-update-modal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+          &times;
+        </button>
+        <h4 class="modal-title">
+          修改个人信息
+        </h4>
+      </div>
+      <div class="modal-body">
+        <div class="panel-body">
+          <ul class="nav nav-tabs nav-justified">
+            <li role="presentation" class="active updateBasic"><a href="#" onclick="showBasicForm()">更新基本信息</a></li>
+            <li role="presentation" class="updatePass"><a href="#" onclick="showPasswordForm()">更新密码</a></li>
+          </ul>
+          <br/>
+          <form th:action="@{/student/updateBasic}" method="post" id="studentUpdateBasicForm">
+            <fieldset>
+              <div hidden="true" class="form-group">
+                <input class="form-control" name="id" th:value="${session.user.id}" value="" type="text"/>
+              </div>
+              <div class="form-group">
+                <input class="form-control" placeholder="电子邮箱" name="email" type="text" value="" th:value="${session.user.email}"/>
+              </div>
+              <div class="form-group">
+                <input class="form-control" placeholder="微信号" name="nickName" type="text" value="" th:value="${session.user.nickName}"/>
+              </div>
+              <div class="form-group">
+                <input class="form-control" placeholder="手机号" name="phoneNumber" type="text" value="" th:value="${session.user.phoneNumber}"/>
+              </div>
+
+              <div class="form-group">
+                <input class="btn btn-lg btn-primary d btn-block" type="submit" value="更新基本信息"/>
+              </div>
+            </fieldset>
+          </form>
+          <form hidden="true" th:action="@{/student/updatePassword}" method="post" id="studentUpdatePasswordForm">
+            <fieldset>
+              <div hidden="true" class="form-group">
+                <input class="form-control" name="id" th:value="${session.user.id}" value="" type="text"/>
+              </div>
+              <div hidden="true" class="form-group">
+                <input class="form-control" name="hiddenEmail" th:value="${session.user.email}" value="" type="text"/>
+              </div>
+              <div hidden="true" class="form-group">
+                <input class="form-control" name="hiddenPhoneNumber" th:value="${session.user.phoneNumber}" value="" type="text"/>
+              </div>
+              <div hidden="true" class="form-group">
+                <input class="form-control" name="hiddenNickName" th:value="${session.user.nickName}" value="" type="text"/>
+              </div>
+              <div class="form-group">
+                <input class="form-control" placeholder="旧密码" name="oldPassword" type="password" value=""/>
+              </div>
+              <div class="form-group">
+                <input class="form-control" placeholder="密码" name="password" type="password" value=""/>
+              </div>
+              <div class="form-group">
+                <input class="form-control" placeholder="重复密码" name="passwordCheck" type="password" value=""/>
+              </div>
+              <div class="form-group">
+                <input class="btn btn-lg btn-primary d btn-block" type="submit" value="更新密码"/>
+              </div>
+            </fieldset>
+          </form>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+        </button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal -->
+</div>
+
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="task-detail" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+          &times;
+        </button>
+        <h4 class="modal-title">
+          作业详情
+        </h4>
+      </div>
+      <div class="modal-body">
+        <div class="panel-body">
+          <br/>
+          <form class="form-horizontal">
+            <div class="form-group">
+              <label for="task-deadline" class="col-sm-2 control-label">截止日期</label>
+              <div class="col-sm-10">
+                <input  type="email" class="form-control" id="task-deadline" value="2017-04-18 23:59">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="task-title" class="col-sm-2 control-label">作业标题</label>
+              <div class="col-sm-10">
+                <input  type="text" class="form-control" id="task-title" value="口语录音topic3">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="task-note" class="col-sm-2 control-label">老师批注</label>
+              <div class="col-sm-10">
+                <input  type="text" class="form-control" id="task-note" value="完成良好">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="task-download" class="col-sm-2 control-label"></label>
+              <div class="col-sm-10">
+                <button id="task-download" type="button" class="btn btn-primary" >下载作业</button>
+              </div>
+
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal -->
+</div>
+
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="pardon-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+          &times;
+        </button>
+        <h4 class="modal-title" id="myModalLabel">
+          特赦原因
+        </h4>
+      </div>
+      <div class="modal-body">
+        <div class="panel-body">
+          <form th:action="@{/student/updateBasic}" method="post" id="pardonForm">
+            <fieldset>
+              <div class="form-group">
+                <input class="form-control" placeholder="特赦原因" name="email" type="text" value="" th:value="${session.user.email}"/>
+              </div>
+            </fieldset>
+          </form>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+        <button type="button" class="btn btn-primary">确认特赦</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal -->
+</div>
+
+<footer>
+  <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+  <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+  <!-- Include all compiled plugins (below), or include individual files as needed -->
+  <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+  <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+  <!--第三方js插件-->
+  <script src="//cdn.bootcss.com/echarts/3.5.3/echarts.min.js"></script>
+  <script src="//cdn.bootcss.com/moment.js/2.18.1/moment.min.js"></script>
+  <script src="//cdn.bootcss.com/fullcalendar/3.3.0/fullcalendar.min.js"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet"/>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
+  <script src="../js/jquery.easing.min.js" type="text/javascript"></script>
+  <script src="../js/bootstrap-treeview.js"></script>
+  <script type="text/javascript" src="../js/bootstrap-datetimepicker.js" charset="UTF-8"></script>
+  <script type="text/javascript" src="../js/locales/bootstrap-datetimepicker.fr.js" charset="UTF-8"></script>
+  <!--本地js-->
+  <script src="../js/ittac-homework.js"></script>
+</footer>
+</body>
+</html>

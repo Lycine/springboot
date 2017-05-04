@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.artbrain.dao.mapper.BulletinMapper">
+    <resultMap id="bulletin" type="com.artbrain.entity.Bulletin">
+        <id property="id" column="id" javaType="INTEGER" jdbcType="INTEGER"/>
+        <result property="title" column="title" jdbcType="VARCHAR"/>
+        <result property="content" column="content" jdbcType="VARCHAR"/>
+        <result property="from" column="from" jdbcType="VARCHAR"/>
+        <result property="to" column="to" jdbcType="VARCHAR"/>
+        <result property="addTime" column="add_time" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_Alias_List">
+        id,
+        title as title,
+        content as content,
+        `from` as `from`,
+        `to` as `to`,
+        add_time as addTime
+    </sql>
+    <select id="selectBulletinById" parameterType="com.artbrain.entity.Bulletin"
+            resultType="com.artbrain.entity.Bulletin">
+        SELECT
+        <include refid="Base_Column_Alias_List"/>
+        FROM `bulletin` WHERE id = #{bulletin.id};
+    </select>
+
+    <select id="selectBulletinByStuId" parameterType="com.artbrain.entity.User"
+            resultType="com.artbrain.entity.Bulletin">
+        SELECT
+        <include refid="Base_Column_Alias_List"/>
+        FROM `bulletin` WHERE `TO` LIKE concat(concat('%',#{user.id}),'%') ORDER BY add_time DESC LIMIT 1;
+    </select>
+
+    <select id="selectBulletinByTeaId" parameterType="com.artbrain.entity.User"
+            resultType="com.artbrain.entity.Bulletin">
+        SELECT
+        <include refid="Base_Column_Alias_List"/>
+        FROM `bulletin` WHERE `TO` id = {user.id};
+    </select>
+
+    <select id="selectBulletinAll" resultType="com.artbrain.entity.Bulletin">
+        SELECT
+        <include refid="Base_Column_Alias_List"/>
+        FROM `bulletin`;
+    </select>
+
+    <insert id="bulletinAdd" parameterType="com.artbrain.entity.Bulletin">
+        INSERT INTO `bulletin` (
+        title,
+        content,
+        `from`,
+        `to`,
+        `add_time`
+        ) VALUES (
+        #{bulletin.title},
+        #{bulletin.content},
+        #{bulletin.from},
+        #{bulletin.to},
+        #{bulletin.addTime}
+        )
+    </insert>
+
+</mapper>

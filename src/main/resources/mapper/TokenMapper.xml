@@ -15,8 +15,7 @@
         master as master,
         remark as remark,
         add_time as addTime,
-        expire_time as expireTime,
-        add_time as addTime
+        expire_time as expireTime
     </sql>
     <select id="selectTokenById" parameterType="com.artbrain.entity.Token" resultType="com.artbrain.entity.Token">
         SELECT

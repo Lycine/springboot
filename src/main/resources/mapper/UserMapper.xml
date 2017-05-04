@@ -9,6 +9,7 @@
         <result property="email" column="email" jdbcType="VARCHAR"/>
         <result property="phoneNumber" column="phone_number" jdbcType="VARCHAR"/>
         <result property="role" column="role" jdbcType="VARCHAR"/>
+        <result property="clazz" column="clazz" jdbcType="VARCHAR"/>
         <result property="loginIp" column="login_ip" jdbcType="VARCHAR"/>
         <result property="loginFailureCount" column="login_failure_count" javaType="INTEGER" jdbcType="INTEGER"/>
         <result property="isDel" column="is_del" javaType="INTEGER" jdbcType="TINYINT"/>
@@ -26,7 +27,10 @@
         email as email,
         phone_number as phoneNumber,
         role as role,
+        clazz as clazz,
         login_ip as loginIp,
+        wx_id as wxId,
+        clazz as clazz,
         login_failure_count as loginFailureCount,
         is_del as isDel,
         is_stop as isStop,
@@ -59,6 +63,12 @@
         </if>
         <if test="user.role!=null and user.role!=''">
             role = #{user.role},
+        </if>
+        <if test="user.wxId!=null and user.wxId!=''">
+            wx_id = #{user.wxId},
+        </if>
+        <if test="user.clazz!=null and user.clazz!=''">
+            clazz = #{user.clazz},
         </if>
         <if test="user.loginIp!=null and user.loginIp!=''">
             login_ip = #{user.loginIp},
@@ -96,6 +106,12 @@
         <if test="user.role!=null and user.role!=''">
             role,
         </if>
+        <if test="user.clazz!=null and user.clazz!=''">
+            clazz,
+        </if>
+        <if test="user.loginIp!=null and user.loginIp!=''">
+            login_ip,
+        </if>
         <if test="user.nickName!=null and user.nickName!=''">
             nick_name,
         </if>
@@ -110,6 +126,12 @@
         <if test="user.role!=null and user.role!=''">
             #{user.role},
         </if>
+        <if test="user.clazz!=null and user.clazz!=''">
+            #{user.clazz},
+        </if>
+        <if test="user.loginIp!=null and user.loginIp!=''">
+            #{user.loginIp},
+        </if>
         <if test="user.nickName!=null and user.nickName!=''">
             #{user.nickName},
         </if>
@@ -122,6 +144,12 @@
         SELECT
         <include refid="Base_Column_Alias_List"/>
         FROM user WHERE email = #{user.email};
+    </select>
+
+    <select id="selectUserByWxId" parameterType="com.artbrain.entity.User" resultType="com.artbrain.entity.User">
+        SELECT
+        <include refid="Base_Column_Alias_List"/>
+        FROM user WHERE wx_id = #{user.wxId};
     </select>
 
 
@@ -142,5 +170,16 @@
         <include refid="Base_Column_Alias_List"/>
         FROM user
     </select>
+
+    <select id="selectUserByClazzId" resultType="com.artbrain.entity.User">
+        SELECT
+        <include refid="Base_Column_Alias_List"/>
+        FROM `user`
+        WHERE `clazz` LIKE concat('%,',#{user.clazz})
+        OR `clazz` LIKE concat(#{user.clazz},',%')
+        OR `clazz` LIKE concat('%,',#{user.clazz},',%')
+        OR `clazz` LIKE #{user.clazz}
+    </select>
+
 
 </mapper>

@@ -8,7 +8,7 @@ import javax.mail.Authenticator;
 import javax.mail.PasswordAuthentication;
 
 public class MailAuthenticator extends Authenticator{
-    private String username="webmaster@mitten-lab.com";
+    private String username="noreply@jozif.org";
     private String password="bzzflngzbwulbigb";
 
     public MailAuthenticator() {

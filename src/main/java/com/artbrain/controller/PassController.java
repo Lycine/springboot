@@ -1,8 +1,8 @@
 package com.artbrain.controller;
 
-import com.artbrain.entity.ResetPasswordDto;
-import com.artbrain.entity.Token;
-import com.artbrain.entity.User;
+import com.artbrain.entity.*;
+import com.artbrain.service.BulletinService;
+import com.artbrain.service.ClazzService;
 import com.artbrain.service.TokenService;
 import com.artbrain.service.UserService;
 import com.artbrain.util.RandomStringGenerator;
@@ -16,6 +16,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -23,7 +24,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import static com.artbrain.util.Global.*;
 
@@ -39,78 +42,84 @@ public class PassController {
     @Autowired
     private TokenService tokenService;
 
+    @Autowired
+    private BulletinService bulletinService;
+
+    @Autowired
+    private ClazzService clazzService;
+
     @RequestMapping(value = "/pass")
     public String signIn() {
         return "pass";
     }
 
-    @RequestMapping(value = REGISTER_PROCESSIN_CONTROLLER, method = RequestMethod.POST)
-    public String register(User user) {
-        try {
-            if (null == user.getEmail() || "".equals(user.getEmail().trim())) {
-                log.debug("邮箱为空");
-                return "redirect:" + REGISTER_PAGE_WRONGFORMAT;
-            }
-            String email = user.getEmail().trim();
-            if (!Validator.isEmail(email)) {
-                log.debug("邮箱格式不正确: " + email);
-                return "redirect:" + REGISTER_PAGE_WRONGFORMAT;
-            }
-            if (userService.isDuplicateEmail(user)) {
-                log.debug("已注册过的邮箱");
-                return "redirect:" + REGISTER_PAGE_DUPLICATEEMAIL;
-            } else {
-                log.debug("新建用户");
-                String salt = CryptoUtils.getSalt();//盐值
-                String password = user.getPassword();//传过来的明文密码
-                String hashPassword = CryptoUtils.getHash(password, salt);//加密的密码
-                user.setSalt(salt);
-                user.setPassword(hashPassword);
-                user.setNickName(user.getEmail());
-
-                if (userService.userAdd(user)) {
-                    log.debug("新建用户成功");
-                } else {
-                    log.debug("新建用户失败，dao层错误");
-                    return "redirect:" + REGISTER_PAGE_UNKNOWN;
-                }
-                Token token = new Token();
-                token.setToken(RandomStringGenerator.getRandomString(50));
-                Date dt = new Date();
-                long nowSec = dt.getTime() / 1000;
-                Date expireTime = new Date((nowSec + 36000) * 1000);
-                Date addTime = new Date(nowSec * 1000);
-                token.setExpireTime(expireTime);
-                token.setAddTime(addTime);
-                token.setMaster("ACTIVE_ACCOUNT");
-                user = userService.userFindByEmail(user);
-                token.setRemark(String.valueOf(user.getId()));
-                if (tokenService.isDuplicateToken(token)) {
-                    log.debug("重置密码失败，token重复");
-                    return "redirect:" + REGISTER_PAGE_UNKNOWN;
-                } else {
-                    tokenService.tokenAdd(token);
-                    SendEmail sendEmail = new SendEmail();
-                    String link = "http://" + HOSTNAME_AND_PORT + "/pass/signIn/active/" + user.getId() + "_" + token.getToken();
-                    if (sendEmail.sendMailActiveAccount(email, link)) {
-                        log.debug("邮件发送成功");
-                        return "redirect:" + REGISTER_PAGE_SUCCESS;
-                    } else {
-                        log.debug("邮件发送失败");
-                        return "redirect:" + REGISTER_PAGE_SENDFAILURE;
-                    }
-                }
-            }
-        } catch (Exception e) {
-            log.debug("新建用户失败，未知错误");
-            e.printStackTrace();
-            return "redirect:" + REGISTER_PAGE_UNKNOWN;
-        }
-
-    }
+//    @RequestMapping(value = REGISTER_PROCESSIN_CONTROLLER, method = RequestMethod.POST)
+//    public String register(User user) {
+//        try {
+//            if (null == user.getEmail() || "".equals(user.getEmail().trim())) {
+//                log.debug("邮箱为空");
+//                return "redirect:" + REGISTER_PAGE_WRONGFORMAT;
+//            }
+//            String email = user.getEmail().trim();
+//            if (!Validator.isEmail(email)) {
+//                log.debug("邮箱格式不正确: " + email);
+//                return "redirect:" + REGISTER_PAGE_WRONGFORMAT;
+//            }
+//            if (userService.isDuplicateEmail(user)) {
+//                log.debug("已注册过的邮箱");
+//                return "redirect:" + REGISTER_PAGE_DUPLICATEEMAIL;
+//            } else {
+//                log.debug("新建用户");
+//                String salt = CryptoUtils.getSalt();//盐值
+//                String password = user.getPassword();//传过来的明文密码
+//                String hashPassword = CryptoUtils.getHash(password, salt);//加密的密码
+//                user.setSalt(salt);
+//                user.setPassword(hashPassword);
+//                user.setNickName(user.getEmail());
+//
+//                if (userService.userAdd(user)) {
+//                    log.debug("新建用户成功");
+//                } else {
+//                    log.debug("新建用户失败，dao层错误");
+//                    return "redirect:" + REGISTER_PAGE_UNKNOWN;
+//                }
+//                Token token = new Token();
+//                token.setToken(RandomStringGenerator.getRandomString(50));
+//                Date dt = new Date();
+//                long nowSec = dt.getTime() / 1000;
+//                Date expireTime = new Date((nowSec + 36000) * 1000);
+//                Date addTime = new Date(nowSec * 1000);
+//                token.setExpireTime(expireTime);
+//                token.setAddTime(addTime);
+//                token.setMaster("ACTIVE_ACCOUNT");
+//                user = userService.userFindByEmail(user);
+//                token.setRemark(String.valueOf(user.getId()));
+//                if (tokenService.isDuplicateToken(token)) {
+//                    log.debug("重置密码失败，token重复");
+//                    return "redirect:" + REGISTER_PAGE_UNKNOWN;
+//                } else {
+//                    tokenService.tokenAdd(token);
+//                    SendEmail sendEmail = new SendEmail();
+//                    String link = "http://" + HOSTNAME_AND_PORT + "/pass/signIn/active/" + user.getId() + "_" + token.getToken();
+//                    if (sendEmail.sendMailActiveAccount(email, link)) {
+//                        log.debug("邮件发送成功");
+//                        return "redirect:" + REGISTER_PAGE_SUCCESS;
+//                    } else {
+//                        log.debug("邮件发送失败");
+//                        return "redirect:" + REGISTER_PAGE_SENDFAILURE;
+//                    }
+//                }
+//            }
+//        } catch (Exception e) {
+//            log.debug("新建用户失败，未知错误");
+//            e.printStackTrace();
+//            return "redirect:" + REGISTER_PAGE_UNKNOWN;
+//        }
+//
+//    }
 
     @RequestMapping(value = SIGNIN_SUCCESS_CONTROLLER)
-    public String loginSuccess(HttpSession session) {
+    public String loginSuccess(HttpSession session,Model model) {
         User user = (User) session.getAttribute("user");
         if (userService.userUpdateById(user)) {
             log.debug("登录信息保存成功");
@@ -119,7 +128,36 @@ public class PassController {
         }
         user = userService.userFindById(user);
         session.setAttribute("user", user);
-        return "redirect:/home";
+        switch (user.getRole()) {
+            case "ROLE_STUDENT":
+                Bulletin bulletin = bulletinService.bulletinLastFindByStuId(user);
+                if (null != bulletin){
+                    model.addAttribute("bulletin", bulletin);
+                    log.debug(bulletin.toString());
+                } else {
+                    log.debug("该用户暂无公告");
+                }
+                List<String> clazzNames = new ArrayList<>();
+                String[] clazzIds = user.getClazz().split(",");
+                for (String clazzId : clazzIds){
+                    Clazz clazz = new Clazz();
+                    clazz.setId(Integer.parseInt(clazzId));
+                    clazz = clazzService.clazzFindById(clazz);
+                    clazzNames.add(clazz.getName());
+                }
+
+                model.addAttribute("userClazzNames",clazzNames);
+                log.debug(clazzNames.toString());
+                log.debug(user.toString());
+                return "/stu/stu_index";
+            case "ROLE_TEACHER":
+                return "/tea/tea_index";
+            case "ROLE_ADMIN":
+
+                return "/admin/admin_index";
+            default:
+                return "pass?signIn&normalFailure";
+        }
     }
 
     @RequestMapping(value = SIGNIN_FAILURE_CONTROLLER + "{signInFailureCode}/{id}")

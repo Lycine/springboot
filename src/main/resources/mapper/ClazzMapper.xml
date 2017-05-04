@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.artbrain.dao.mapper.ClazzMapper">
+    <resultMap id="clazz" type="com.artbrain.entity.Clazz">
+        <id property="id" column="id" javaType="INTEGER" jdbcType="INTEGER"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="from" column="from" jdbcType="VARCHAR"/>
+        <result property="addTime" column="add_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_Alias_List">
+        id,
+        `name` as `name`,
+        `from` as `from`,
+        `add_time` as `addTime`,
+        `update_time` as `updateTime`
+    </sql>
+    <select id="selectClazzById" parameterType="com.artbrain.entity.Clazz" resultType="com.artbrain.entity.Clazz">
+        SELECT
+        <include refid="Base_Column_Alias_List"/>
+        FROM `clazz` WHERE id = #{clazz.id};
+    </select>
+
+    <update id="updateClazzById" parameterType="com.artbrain.entity.Clazz">
+        UPDATE `clazz` SET
+        `name` = #{clazz.name},
+        `from` = #{clazz.from},
+        WHERE id = #{clazz.id};
+    </update>
+
+    <insert id="addClazz" parameterType="com.artbrain.entity.Clazz">
+        INSERT INTO clazz (
+        `name`,
+        `from`
+        ) VALUES (
+        #{clazz.name},
+        #{clazz.from}
+        )
+    </insert>
+
+    <select id="selectAllClazz" resultType="com.artbrain.entity.Clazz">
+        SELECT
+        <include refid="Base_Column_Alias_List"/>
+        FROM clazz
+    </select>
+
+</mapper>
